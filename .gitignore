@@ -1,0 +1,82 @@
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+*.xls
+*.xlsx
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+*.accdb
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+#aimms
+*.zip
+*.log
+*.log
+*.bak
+*.dmp
+*.err
+*.lis
+*.log
+*.aux
+
+
+# Latex #
+##########
+
+## Core latex/pdflatex auxiliary files:
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.fmt
+
+## Intermediate documents:
+*.dvi
+*-converted-to.*
+# these rules might exclude image files for figures etc.
+# *.ps
+# *.eps
+# *.pdf
+*.nch
+
+## R:
+*.RData
+*.Rhistory
+*.Rproj.user
+.Rproj.user
+/src/env/
+/src/.vscode/

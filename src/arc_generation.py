@@ -1,10 +1,15 @@
 import class_creation as cc
 
-def simple_arc_generation(cross, points, times, idx):
+def simple_arc_generation(cross, points, names, times, idx):
     """"""
 
     arcs = {}
-        
+    
+    if cross == 280:
+        timeWindow = 6
+    else:
+        timeWindow = 4
+
     for pointA in points:
         aux = times[(times.originCode==cross) & (times.destinationCode==pointA)]
         if len(aux)==0:
@@ -12,32 +17,43 @@ def simple_arc_generation(cross, points, times, idx):
         
         t1 = aux.iloc[0]['Hours']
 
-        if t1 <= 6:
-            arcs[idx] = cc.Complex_arc(idx, 'test', pointA, cross, (cross, pointA), 1)
+        if t1 > timeWindow:
+            continue
+
+        if t1 <= timeWindow:
+            arcs[idx] = cc.Complex_arc(idx, pointA, cross, (cross, pointA), 1)
+            arcs[idx].set_name(names)
             arcs[idx].set_time(t1)
             idx = idx + 1
 
-        if t1 * 4/3 <= 6:
-            arcs[idx] = cc.Complex_arc(idx, 'test', pointA, cross, (cross, pointA), 2)
+        if t1 * 4/3 <= timeWindow:
+            arcs[idx] = cc.Complex_arc(idx, pointA, cross, (cross, pointA), 2)
+            arcs[idx].set_name(names)
             arcs[idx].set_time(t1 * 4/3)
             idx = idx + 1
 
         if t1 * 4/3 <= 4:
-            arcs[idx] = cc.Complex_arc(idx, 'test', pointA, cross, (cross, pointA), 3)
+            arcs[idx] = cc.Complex_arc(idx, pointA, cross, (cross, pointA), 3)
+            arcs[idx].set_name(names)
             arcs[idx].set_time(t1 * 4/3)
             idx = idx + 1
     
     return arcs, idx
 
-def complex_arc_genertation(cross, arcs, times, idx):
+def complex_arc_genertation(cross, cross_points, arcs, names, times, idx):
     """"""
 
     arc_dict = {}
     
+    if cross == 280:
+        timeWindow = 6
+    else:
+        timeWindow = 4
+
     for i in arcs:
         for j in arcs:
             
-            if i == j or arcs[i].vehicle != arcs[j].vehicle or arcs[i].vehicle >= 3 or arcs[j].vehicle >= 3:
+            if i == j or arcs[i].vehicle != arcs[j].vehicle or arcs[i].vehicle >= 3 or arcs[j].vehicle >= 3 or arcs[i].origin in cross_points:
                 continue
             
             aux1 = times[(times.originCode==cross) & (times.destinationCode==arcs[i].origin)]
@@ -54,8 +70,9 @@ def complex_arc_genertation(cross, arcs, times, idx):
             if t1 > t3:
                 continue
                         
-            if (t1 + t2 + 0.25 <= 6 and arcs[i].vehicle == 1) or ((t1 + t2) * 4/3 + 0.25 <= 6 and arcs[i].vehicle == 2):
-                arc_dict[idx] = cc.Complex_arc(idx, 'test', arcs[j].origin, cross, (cross, arcs[i].origin, arcs[j].origin), arcs[i].vehicle)
+            if (t1 + t2 + 0.25 <= timeWindow and arcs[i].vehicle == 1) or ((t1 + t2) * 4/3 + 0.25 <= timeWindow and arcs[i].vehicle == 2):
+                arc_dict[idx] = cc.Complex_arc(idx, arcs[j].origin, cross, (cross, arcs[i].origin, arcs[j].origin), arcs[i].vehicle)
+                arc_dict[idx].set_name(names)
                 if arc_dict[idx].vehicle == 1:
                     arc_dict[idx].set_time(t1 + t2 + 0.25)
                 else:
@@ -166,9 +183,9 @@ def full_path_generation(cross, first_arcs, second_arcs, demand, idx):
     
     return paths, idx
 
-def trailer_arc_generation(points, demand, times, arc_idx, cycle_idx, path_idx):
+def trailer_arc_generation(points, names, demand, times, arc_idx, cycle_idx, path_idx):
     """"""
-    
+
     arcs = {}
     cycles = {}
     paths = {}
@@ -190,7 +207,8 @@ def trailer_arc_generation(points, demand, times, arc_idx, cycle_idx, path_idx):
 
             if t1 * 4/3 <= 8 and d1 > 1475:
                 
-                arcs[arc_idx] = cc.Complex_arc(arc_idx, 'test', origin, destination, (origin, destination), 4)
+                arcs[arc_idx] = cc.Complex_arc(arc_idx, origin, destination, (origin, destination), 4)
+                arcs[arc_idx].set_name(names)
                 arcs[arc_idx].set_time(t1 * 4/3)
 
                 cycles[cycle_idx] = cc.Cycle(cycle_idx, origin, destination, (origin, destination), 4)

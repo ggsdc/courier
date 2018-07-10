@@ -3,6 +3,7 @@ import pandas as pd
 import datetime as datetime
 import class_creation as cc
 import arc_generation as generator
+import time_space as ts
 
 # Routes to the data files. This has to be changed.
 vehicles_path = "..\\data\\vehicles.data"
@@ -14,6 +15,8 @@ t1 = datetime.datetime.now()
 # Loading of the data files.
 vehicles_data = pd.read_csv(vehicles_path, sep = '\t')
 points_data = pd.read_csv(points_path, sep = '\t')
+points_names = points_data[['code', 'point']]
+
 demand_data = pd.read_csv(demand_path, sep = '\t')
 
 demand_origin \
@@ -71,7 +74,7 @@ for cross in cross_docking_points:
 
     # Get the simple arcs
     temp_arcs, arc_idx \
-        = generator.simple_arc_generation(cross, points_set, times, arc_idx)
+        = generator.simple_arc_generation(cross, points_set, points_names, times, arc_idx)
     
     print(cross, ' - ', len(temp_arcs), ' Simple arcs')
         
@@ -81,7 +84,7 @@ for cross in cross_docking_points:
     
     # Get complex arcs
     temp_arcs, arc_idx \
-        = generator.complex_arc_genertation(cross, temp_arcs, times, arc_idx)
+        = generator.complex_arc_genertation(cross, cross_docking_points, temp_arcs, points_names, times, arc_idx)
     
     print(cross, ' - ', len(temp_arcs), ' Complex arcs')
     
@@ -119,7 +122,7 @@ print(t3-t2)
 t2 = datetime.datetime.now()
 # We add more arcs
 temp_arcs, temp_cycles, temp_paths, arc_idx, cycle_idx, path_idx \
-    = generator.trailer_arc_generation(points_set, demand, times, arc_idx, cycle_idx, path_idx)
+    = generator.trailer_arc_generation(points_set, points_names, demand, times, arc_idx, cycle_idx, path_idx)
 print('Número de TSR: ', len(temp_arcs))
 
 print(t2-t3)
@@ -128,3 +131,10 @@ print(t2-t3)
 arc_dict.update(temp_arcs)
 cycle_dict.update(temp_arcs)
 path_dict.update(temp_paths)
+
+# we get the dictionary of time-space nodes (key - tuple (point, time))
+# For now to make it easier the begining time is 19.00h or 0, and the end time is 10:00 or 54000s
+# with an interval of 5min or 300s.
+# With the full data set and this interval we will have a maximum of 24254 time-space nodes
+time_space_dict = {}
+time_space_dict = ts.create_full_diagram(points_set, 0, 54000, 300)

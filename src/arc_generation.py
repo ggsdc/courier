@@ -1,4 +1,6 @@
-import class_creation as cc
+import complex_arc as ca
+import cycle as cy
+import path as pa
 
 def simple_arc_generation(cross, points, names, times, idx):
     """"""
@@ -21,19 +23,19 @@ def simple_arc_generation(cross, points, names, times, idx):
             continue
 
         if t1 <= timeWindow:
-            arcs[idx] = cc.Complex_arc(idx, pointA, cross, (cross, pointA), 1)
+            arcs[idx] = ca.Complex_arc(idx, pointA, cross, (cross, pointA), 1)
             arcs[idx].set_name(names)
             arcs[idx].set_time(t1)
             idx = idx + 1
 
         if t1 * 4/3 <= timeWindow:
-            arcs[idx] = cc.Complex_arc(idx, pointA, cross, (cross, pointA), 2)
+            arcs[idx] = ca.Complex_arc(idx, pointA, cross, (cross, pointA), 2)
             arcs[idx].set_name(names)
             arcs[idx].set_time(t1 * 4/3)
             idx = idx + 1
 
         if t1 * 4/3 <= 4:
-            arcs[idx] = cc.Complex_arc(idx, pointA, cross, (cross, pointA), 3)
+            arcs[idx] = ca.Complex_arc(idx, pointA, cross, (cross, pointA), 3)
             arcs[idx].set_name(names)
             arcs[idx].set_time(t1 * 4/3)
             idx = idx + 1
@@ -71,7 +73,7 @@ def complex_arc_genertation(cross, cross_points, arcs, names, times, idx):
                 continue
                         
             if (t1 + t2 + 0.25 <= timeWindow and arcs[i].vehicle == 1) or ((t1 + t2) * 4/3 + 0.25 <= timeWindow and arcs[i].vehicle == 2):
-                arc_dict[idx] = cc.Complex_arc(idx, arcs[j].origin, cross, (cross, arcs[i].origin, arcs[j].origin), arcs[i].vehicle)
+                arc_dict[idx] = ca.Complex_arc(idx, arcs[j].origin, cross, (cross, arcs[i].origin, arcs[j].origin), arcs[i].vehicle)
                 arc_dict[idx].set_name(names)
                 if arc_dict[idx].vehicle == 1:
                     arc_dict[idx].set_time(t1 + t2 + 0.25)
@@ -138,7 +140,7 @@ def cycle_generation(cross, arcs, demandOr, demandDest, idx):
             if len(arcs[j].points)==3:
                 points_order = points_order + (arcs[j].points[2],)
 
-            cycles[idx] = cc.Cycle(idx, arcs[i].origin, cross, points_order, arcs[i].vehicle)
+            cycles[idx] = cy.Cycle(idx, arcs[i].origin, cross, points_order, arcs[i].vehicle)
             cycles[idx].set_demand(d1, d2)
 
             arcs_aux[arcs[i].idx] = arcs[i]
@@ -178,7 +180,7 @@ def full_path_generation(cross, first_arcs, second_arcs, demand, idx):
             if len(second_arcs[j].points)==3:
                 points_order = points_order + (second_arcs[j].points[2],)
 
-            paths[idx] = cc.Path(idx, points_order[0], cross, points_order[-1], points_order, first_arcs[i].vehicle, second_arcs[j].vehicle)
+            paths[idx] = pa.Path(idx, points_order[0], cross, points_order[-1], points_order, first_arcs[i].vehicle, second_arcs[j].vehicle)
             idx = idx + 1
     
     return paths, idx
@@ -207,14 +209,14 @@ def trailer_arc_generation(points, names, demand, times, arc_idx, cycle_idx, pat
 
             if t1 * 4/3 <= 8 and d1 > 1475:
                 
-                arcs[arc_idx] = cc.Complex_arc(arc_idx, origin, destination, (origin, destination), 4)
+                arcs[arc_idx] = ca.Complex_arc(arc_idx, origin, destination, (origin, destination), 4)
                 arcs[arc_idx].set_name(names)
                 arcs[arc_idx].set_time(t1 * 4/3)
 
-                cycles[cycle_idx] = cc.Cycle(cycle_idx, origin, destination, (origin, destination), 4)
+                cycles[cycle_idx] = cy.Cycle(cycle_idx, origin, destination, (origin, destination), 4)
                 cycles[cycle_idx].set_demand(d1, 0)
                 
-                paths[path_idx] = cc.Path(path_idx, origin, 0, destination, (origin, destination), 4, 0)
+                paths[path_idx] = pa.Path(path_idx, origin, 0, destination, (origin, destination), 4, 0)
                                 
                 arc_idx = arc_idx + 1
                 cycle_idx = cycle_idx + 1

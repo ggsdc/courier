@@ -4,7 +4,6 @@ class Path(object):
     This class will be used by the paths, defining a series of arguments and methods to be used.
     
     """
-
     def __init__(self, idx, origin, cross, destination, points, vehicle_first, vehicle_second):
         """Initialize magic method to create a new path.
         

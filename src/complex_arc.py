@@ -5,7 +5,7 @@ class Complex_arc(object):
     This class will be used for the arcs, defining a series of methods and arguments
 
     """
-    def __init__(self, idx, origin, destination, points, vehicle):
+    def __init__(self, idx, origin, destination, points, vehicle, names):
         """ Initialize magic method to create a new complex arc.
 
         Parameters
@@ -31,6 +31,12 @@ class Complex_arc(object):
         self.destination = destination
         self.points = points
         self.vehicle = vehicle
+        self.name = '('
+        for point in self.points:
+            self.name += str(names[point]) + ', '
+        
+        self.name = self.name + str(self.vehicle)
+        self.name += ')'
 
     def __repr__(self):
         """Representation magic method"""
@@ -58,13 +64,41 @@ class Complex_arc(object):
         """
         self.generated = generated
         self.received = received
+
+    def set_points_generated(self, pointsGenerated = list()):
+        """"""
+        self.pointsGenerated = pointsGenerated
+
+    def set_points_received(self, pointsReceived = list()):
+        """"""
+        self.pointsReceived = pointsReceived
+
+    def get_demand(self):
+        """"""
+        return self.generated, self.received
+
+    def get_generated(self):
+        """"""
+        return self.generated
+
+    def get_received(self):
+        """"""
+        return self.received
+
+    def get_pointsGenerated(self):
+        """"""
+        return self.pointsGenerated
+
+    def get_pointsReceived(self):
+        """"""
+        return self.pointsReceived
   
     def print_demand(self):
         """Method to print the demand info about the demand"""
         return 'The points in the arc generate ' + str(self.generated) \
             + ' parcels and receive ' + str(self.received) + ' parcels'
     
-    def set_name(self, name):
+    def set_name(self):
         """Method to set up the name of the arc
         
         Parameters
@@ -80,8 +114,11 @@ class Complex_arc(object):
         for point in self.points:
             self.name += str(name[(name.code==point)].iloc[0]['point']) + ', '
         
-        self.name =self.name[:-2]
+        self.name = self.name + str(self.vehicle)
         self.name += ')'
+
+    def print_name(self):
+        return 'The arc is: ' + str(self.name)
 
     def set_time(self, hours=0):
         """Method to assign the duration of the arc
@@ -98,3 +135,7 @@ class Complex_arc(object):
         """
         self.hours = hours
         self.minutes = hours * 60
+
+    def get_hours(self):
+        """"""
+        return self.hours

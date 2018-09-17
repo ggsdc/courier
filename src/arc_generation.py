@@ -2,50 +2,78 @@ import complex_arc as ca
 import cycle as cy
 import path as pa
 
-def simple_arc_generation(cross, points, names, times, idx):
+@profile
+def simple_arc_generation(cross, points, names, times, demand, idx):
     """"""
 
-    arcs = {}
-    
+    arcs = list()
+    item = 0
+
+    demandOr \
+        = demand.groupby('originCode', as_index = False).agg({"parcels": "sum"})
+
+    demandDest \
+        = demand.groupby('destinationCode', as_index = False).agg({"parcels": "sum"})
+
     if cross == 280:
         timeWindow = 6
     else:
         timeWindow = 4
 
     for pointA in points:
-        aux = times[(times.originCode==cross) & (times.destinationCode==pointA)]
-        if len(aux)==0:
+        try:
+            t1 = times[cross][pointA]
+        except KeyError:
             continue
-        
-        t1 = aux.iloc[0]['Hours']
 
         if t1 > timeWindow:
             continue
+        
+        d1 = 0
+        d2 = 0
+        aux = demandOr[(demandOr.originCode == pointA)]
+        aux2 = demandDest[(demandDest.destinationCode == pointA)]
+
+        if len(aux) > 0:
+            d1 = aux.iloc[0]['parcels']
+
+        if len(aux2) > 0:
+            d2 = aux2.iloc[0]['parcels']
 
         if t1 <= timeWindow:
-            arcs[idx] = ca.Complex_arc(idx, pointA, cross, (cross, pointA), 1)
-            arcs[idx].set_name(names)
-            arcs[idx].set_time(t1)
+            arcs.append(ca.Complex_arc(idx, pointA, cross, (cross, pointA), 1, names))
+            arcs[item].set_time(t1)
+            arcs[item].set_demand(d1,d2)
+            arcs[item].set_points_generated(demand[(demand.originCode == pointA)]['destinationCode'].tolist())
+            arcs[item].set_points_received(demand[(demand.destinationCode == pointA)]['originCode'].tolist())
             idx = idx + 1
+            item = item + 1
 
         if t1 * 4/3 <= timeWindow:
-            arcs[idx] = ca.Complex_arc(idx, pointA, cross, (cross, pointA), 2)
-            arcs[idx].set_name(names)
-            arcs[idx].set_time(t1 * 4/3)
+            arcs.append(ca.Complex_arc(idx, pointA, cross, (cross, pointA), 2, names))
+            arcs[item].set_time(t1 * 4/3)
+            arcs[item].set_demand(d1,d2)
+            arcs[item].set_points_generated(demand[(demand.originCode == pointA)]['destinationCode'].tolist())
+            arcs[item].set_points_received(demand[(demand.destinationCode == pointA)]['originCode'].tolist())
             idx = idx + 1
+            item = item + 1
 
         if t1 * 4/3 <= 4:
-            arcs[idx] = ca.Complex_arc(idx, pointA, cross, (cross, pointA), 3)
-            arcs[idx].set_name(names)
-            arcs[idx].set_time(t1 * 4/3)
+            arcs.append(ca.Complex_arc(idx, pointA, cross, (cross, pointA), 3, names))
+            arcs[item].set_time(t1 * 4/3)
+            arcs[item].set_demand(d1,d2)
+            arcs[item].set_points_generated(demand[(demand.originCode == pointA)]['destinationCode'].tolist())
+            arcs[item].set_points_received(demand[(demand.destinationCode == pointA)]['originCode'].tolist())
             idx = idx + 1
+            item = item + 1
     
     return arcs, idx
 
 def complex_arc_genertation(cross, cross_points, arcs, names, times, idx):
     """"""
 
-    arc_dict = {}
+    arc_list = list()
+    item = 0
     
     if cross == 280:
         timeWindow = 6
@@ -55,132 +83,132 @@ def complex_arc_genertation(cross, cross_points, arcs, names, times, idx):
     for i in arcs:
         for j in arcs:
             
-            if i == j or arcs[i].vehicle != arcs[j].vehicle or arcs[i].vehicle >= 3 or arcs[j].vehicle >= 3 or arcs[i].origin in cross_points:
+            if i == j or i.vehicle != j.vehicle or i.vehicle >= 3 or j.vehicle >= 3 or i.origin in cross_points:
                 continue
-            
-            aux1 = times[(times.originCode==cross) & (times.destinationCode==arcs[i].origin)]
-            aux2 = times[(times.originCode==arcs[i].origin) & (times.destinationCode==arcs[j].origin)]
-            aux3 = times[(times.originCode==cross) & (times.destinationCode==arcs[j].origin)]
-            
-            if (len(aux1)==0 or len(aux2)==0):
+                        
+            t1 = i.get_hours()
+            try:
+                t2 = times[i.origin][j.origin]
+            except KeyError:
                 continue
 
-            t1 = aux1.iloc[0]['Hours']
-            t2 = aux2.iloc[0]['Hours']
-            t3 = aux3.iloc[0]['Hours']
+            t3 = j.get_hours()
 
             if t1 > t3:
                 continue
-                        
-            if (t1 + t2 + 0.25 <= timeWindow and arcs[i].vehicle == 1) or ((t1 + t2) * 4/3 + 0.25 <= timeWindow and arcs[i].vehicle == 2):
-                arc_dict[idx] = ca.Complex_arc(idx, arcs[j].origin, cross, (cross, arcs[i].origin, arcs[j].origin), arcs[i].vehicle)
-                arc_dict[idx].set_name(names)
-                if arc_dict[idx].vehicle == 1:
-                    arc_dict[idx].set_time(t1 + t2 + 0.25)
-                else:
-                    arc_dict[idx].set_time((t1 + t2) * 4/3 + 0.25)
-                    
-                idx = idx + 1
 
-    return arc_dict, idx
+            if i.vehicle==2:
+                t2 = t2 * 4/3
+                        
+            if (t1 + t2 + 0.25 <= timeWindow):
+                arc_list.append(ca.Complex_arc(idx, j.origin, cross, (cross, i.origin, j.origin), i.vehicle, names))
+                
+                d1, d2 = i.get_demand()
+                d3, d4 = j.get_demand()
+
+                arc_list[item].set_time(t1 + t2 + 0.25)
+                arc_list[item].set_demand(d1 + d3, d2 + d4)
+
+                l1 = list()
+                l2 = list()
+
+                l1.extend(i.get_pointsGenerated())
+                l2.extend(i.get_pointsReceived())
+
+                l1.extend(x for x in j.get_pointsGenerated() if x not in l1)
+                l2.extend(x for x in j.get_pointsReceived() if x not in l2)
+
+                arc_list[item].set_points_generated(l1)
+                arc_list[item].set_points_received(l2)
+
+                #arc_list[item].set_points_generated(list(set(l1)))
+                #arc_list[item].set_points_received(list(set(l2)))
+                                    
+                idx = idx + 1
+                item = item + 1
+
+    return arc_list, idx
 
 def cycle_generation(cross, arcs, demandOr, demandDest, idx):
     """"""
 
-    cycles = {}
-    arcs_aux = {}
-    arcs_aux_2 = {}
+    cycles = list()
+    arcs_aux = list()
+    arcs_aux_2 = list()
+    item = 0
 
     for i in arcs:
         for j in arcs:
-            
-            if (arcs[i].origin != arcs[j].origin or arcs[i].vehicle != arcs[j].vehicle):
+
+            if (i.origin != j.origin or i.vehicle != j.vehicle or i.destination != j.destination):
                 continue
             
-            d1 = 0
-            d2 = 0
-
-            for pointA in arcs[i].points:
-                
-                if pointA==arcs[i].destination:
-                    continue
-                
-                aux1 = demandOr[(demandOr.originCode == pointA)]
-                
-                if len(aux1) == 0:
-                    continue
-                
-                d1 += aux1.iloc[0]['parcels']
-                
-
-            for pointB in arcs[j].points:
-                
-                if pointB==arcs[i].destination:
-                    continue
-                
-                aux2 = demandDest[(demandDest.destinationCode == pointB)]
-                if len(aux2) == 0:
-                    continue
-                
-                d2 += aux2.iloc[0]['parcels']
+            d1 = i.get_generated()
+            d2 = j.get_received()
             
-
-            if d1 <= 1000 and d2 <= 1000 and arcs[i].vehicle == 2:
+            if d1 <= 1000 and d2 <= 1000 and i.vehicle == 2:
                 continue
-            elif d1 <= 1475 and d2 <= 1475 and arcs[j].vehicle == 3:
+            elif d1 <= 1475 and d2 <= 1475 and i.vehicle == 3:
                 continue
 
             points_order = ()
                     
-            if len(arcs[i].points)==3:
-                points_order = points_order + (arcs[i].points[2],)
+            if len(i.points)==3:
+                points_order = points_order + (i.points[2],)
             
-            points_order = points_order + (arcs[i].points[1], arcs[i].destination, arcs[j].points[1])
+            points_order = points_order + (i.points[1], i.destination, j.points[1])
 
-            if len(arcs[j].points)==3:
-                points_order = points_order + (arcs[j].points[2],)
+            if len(j.points)==3:
+                points_order = points_order + (j.points[2],)
 
-            cycles[idx] = cy.Cycle(idx, arcs[i].origin, cross, points_order, arcs[i].vehicle)
-            cycles[idx].set_demand(d1, d2)
+            cycles.append(cy.Cycle(idx, i.origin, cross, points_order, i.vehicle))
+            cycles[item].set_demand(d1, d2)
 
-            arcs_aux[arcs[i].idx] = arcs[i]
-            arcs_aux_2[arcs[j].idx] = arcs[j]
+            try:
+                aux_idx = arcs_aux.index(i)
+            except ValueError:
+                arcs_aux.append(i)
+
+            try:
+                aux_id = arcs_aux_2.index(j)
+            except ValueError:
+                arcs_aux_2.append(j)
             
             idx = idx + 1
+            item = item + 1
 
     return cycles, arcs_aux, arcs_aux_2, idx
 
 def full_path_generation(cross, first_arcs, second_arcs, demand, idx):
     """"""
 
-    paths = {}
+    paths = list()
 
     for i in first_arcs:
+        l1 = i.get_pointsGenerated()
+        
         for j in second_arcs:
 
-            if i==j or first_arcs[i].origin==second_arcs[j].origin:
+            if i==j or i.origin==j.origin:
                 continue
 
-            aux = demand[(demand.originCode==first_arcs[i].origin) & (demand.destinationCode==second_arcs[j].origin)]
+            l2 = list(j.points)
+            l2.remove(j.destination)
 
-            if len(aux)==0:
+            if not set(l2)<set(l1):
                 continue
-            else:
-                d = aux.iloc[0]['parcels']
-                if d == 0:
-                    continue
               
             points_order = ()
 
-            if len(first_arcs[i].points)==3:
-                    points_order = points_order + (first_arcs[i].points[2],)
+            if len(i.points)==3:
+                    points_order = points_order + (i.points[2],)
                 
-            points_order = points_order + (first_arcs[i].points[1], first_arcs[i].destination, second_arcs[j].points[1])
+            points_order = points_order + (i.points[1], i.destination, j.points[1])
 
-            if len(second_arcs[j].points)==3:
-                points_order = points_order + (second_arcs[j].points[2],)
+            if len(j.points)==3:
+                points_order = points_order + (j.points[2],)
 
-            paths[idx] = pa.Path(idx, points_order[0], cross, points_order[-1], points_order, first_arcs[i].vehicle, second_arcs[j].vehicle)
+            paths.append(pa.Path(idx, points_order[0], cross, points_order[-1], points_order, i.vehicle, j.vehicle))
             idx = idx + 1
     
     return paths, idx

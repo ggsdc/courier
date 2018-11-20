@@ -3,7 +3,7 @@ class Cycle(object):
     
     This class will be used for the cycles, defining a series of methods and arguments
     """
-    def __init__(self, idx, origin, cross, points, vehicle):
+    def __init__(self, idx, origin, cross, points, vehicle, names):
         """Initialize magic method to create a new cycle.
         
         Parameters
@@ -28,6 +28,12 @@ class Cycle(object):
         self.cross = cross
         self.points = points
         self.vehicle = vehicle
+        self.name = '('
+        for point in self.points:
+            self.name += str(names[point]) + ', '
+        
+        self.name += self.name + str(self.vehicle)
+        self.name += ')'
 
     def __repr__(self):
         """Representation magic method"""

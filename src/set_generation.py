@@ -4,7 +4,7 @@ import itinerary as it
 
 def simple_path_generation(cross, points, times, distance, demand, idx):
     """
-    Funtions to create paths of length N = 2
+    Function to create paths of length N = 2
 
     Arguments
     ---------
@@ -22,7 +22,7 @@ def simple_path_generation(cross, points, times, distance, demand, idx):
 
     Returns
     -------
-        A list of instances of Paths.
+        A list of instances of Paths and the next avalaible code (updated idx).
     """
 
     # Initialize objects to be used
@@ -124,10 +124,34 @@ def simple_path_generation(cross, points, times, distance, demand, idx):
     # It returns the list of paths and the current free index for the paths.
     return paths, idx
 
-def complex_path_generation(cross, cross_points, arcs, points, times, distance, idx):
-    """"""
+def complex_path_generation(cross, cross_points, paths, points, times, distance, idx):
+    """
+    Function to create paths of length N = 3
 
-    arc_list = list()
+    Arguments
+    ---------
+    cross : int
+        Code of the cross point the paths are being generated for.
+    cross_points : set
+        Set of all the cross points in the problem.
+    paths : list
+        List of already generated arcs for that cross point.
+    points : set
+        Set of all the points in the problem.
+    times : dict
+        Dictionary of the times between points.
+    distance : dict
+        Dictionary of the distance between points.
+    idx : int
+        Free code for the path.
+
+    Returns
+    -------
+        A list of the generated paths and the updated index (idx).
+    """
+
+    # Intilize the objects to be used.
+    path_list = list()
     item = 0
     
     if cross == 280:
@@ -135,55 +159,75 @@ def complex_path_generation(cross, cross_points, arcs, points, times, distance, 
     else:
         timeWindow = 4
 
-    for i in arcs:
+    # Iterate over the already generated arcs
+    for i in paths:
         
+        # If the path begins in a cross_point or the vehicle is a trailer continue to the nex iteration.
         if i.origin in cross_points or i.vehicle >= 3:
             continue
         
-        aux_arcs = [arc for arc in arcs if i != arc and i.vehicle == arc.vehicle]
+        # Gets the paths that are not the same path and share the same vehicle.
+        aux_paths = [path for path in paths if i != path and i.vehicle == path.vehicle]
+        
+        # Gets the hours and distance of the first path.
         t1 = i.get_hours()
         d1 = i.get_distance()
 
-        for j in aux_arcs:
-                                    
+        # Iterate over filtered paths.
+        for j in aux_paths:
+
+            # Gets the time between origin of the paths or iterates over.                 
             try:
                 t2 = times[i.origin][j.origin]
             except KeyError:
                 continue
 
+            # Gets the distance between origin of the paths or iterates over.
             try:
                 d2 = distance[i.origin][j.origin]
             except KeyError:
                 continue
 
+            # Gets the hours of the second path.
             t3 = j.get_hours()
-
+            
+            # If the time of the length of the first path
             if t1 > t3:
                 continue
 
-            if i.vehicle==2:
+            # If the vehicle of the paths is a truck it gets the length updated.  
+            if i.vehicle == 2:
                 t2 = t2 * 4/3
-                        
+
+            # If the duration of the composite path is less than the timeWindow then the path gets created.
             if (t1 + t2 + 0.25 <= timeWindow):
-                arc_list.append(pa.Path(idx, j.origin, cross, (cross, i.origin, j.origin), i.vehicle, points))
                 
+                # The path is created
+                path_list.append(pa.Path(idx, j.origin, cross, (cross, i.origin, j.origin), i.vehicle, points))
+                
+                # Gets the demand of boths paths.
                 p1, p2 = i.get_demand()
                 p3, p4 = j.get_demand()
 
-                arc_list[item].set_time(t1 + t2 + 0.25)
-                arc_list[item].set_demand(p1 + p3, p2 + p4)
-                arc_list[item].set_distance(d1 + d2)
+                # Sets the time, distance and demand of the path.
+                path_list[item].set_time(t1 + t2 + 0.25)
+                path_list[item].set_demand(p1 + p3, p2 + p4)
+                path_list[item].set_distance(d1 + d2)
 
+                # Creates the lists of the pointsGenerated and pointsReceived for the new path.
                 l1 = list(set(i.get_pointsGenerated() + j.get_pointsGenerated()))
                 l2 = list(set(i.get_pointsReceived() + j.get_pointsReceived()))
 
-                arc_list[item].set_points_generated(l1)
-                arc_list[item].set_points_received(l2)
+                # Sets the pointsGenerated and pointsReceived of the new path.
+                path_list[item].set_points_generated(l1)
+                path_list[item].set_points_received(l2)
 
+                # Updates the index of the paths and the running item index.
                 idx = idx + 1
                 item = item + 1
 
-    return arc_list, idx
+    # Returns the created path list and the running index fort the paths.
+    return path_list, idx
 
 def cycle_generation(cross, arcs, points, idx):
     """"""

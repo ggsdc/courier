@@ -3,9 +3,30 @@ import cycle as cy
 import itinerary as it
 
 def simple_path_generation(cross, points, times, distance, demand, idx):
-    """"""
+    """
+    Funtions to create paths of length N = 2
 
-    arcs = list()
+    Arguments
+    ---------
+    cross : int
+        Code of the cross point that the paths have to go to.
+    points : set
+        Set of the rest of the points in the problem.
+    times : dict
+        Dictionary with the times between points
+    distance : dict
+        Dictionary with the distance between points
+    demand : dict
+        The demand dict that contains all the demand different dictionaries.
+    idx : int
+
+    Returns
+    -------
+        A list of instances of Paths.
+    """
+
+    # Initialize objects to be used
+    paths = list()
     item = 0
 
     demand_dict = demand['baseDict']
@@ -14,79 +35,94 @@ def simple_path_generation(cross, points, times, distance, demand, idx):
     demand_parcels_for = demand['forDict']
     demand_parcels_from = demand['fromDict']
 
+    # Time-window 6 hours for Madrid, 4 hours for the rest
     if cross == 280:
         timeWindow = 6
     else:
         timeWindow = 4
 
+    # Main loop for the path generation.
     for pointA in points:
+        
+        # Gets the time back or continues to the next iteration.
         try:
             t1 = times[cross][pointA]
         except KeyError:
             continue
 
+        # If the time is smaller than the timeWindow.
         if t1 > timeWindow:
             continue
-        
+
+       # Gets the demand generated in the point. Defaults to zero.  
         try:
             p1 = demand_origin_dict[pointA]
         except KeyError:
             p1 = 0
         
+        # Gets the demand received by the point. Defaults to zero.
         try:
             p2 = demand_destination_dict[pointA]
         except KeyError:
             p2 = 0
 
+        # In case both are zero we pass to the next iteration.
         if p1 == 0 and p2 == 0:
             continue
         
+        # Gets the list of points that the point generates demand to.
         try:
             l1 = demand_parcels_for[pointA]
         except KeyError:
             l1 = list()
         
+        # Gets the list of points that the point receives demand from.
         try:
             l2 = demand_parcels_from[pointA]
         except KeyError:
             l2 = list()
         
+        # Gets the distance between the point and the cross-point.
+        # If it not exists we pass to the next iteration.
         try:
             d1 = distance[pointA][cross]
         except KeyError:
             continue
         
-        if t1 <= timeWindow:
-            arcs.append(pa.Path(idx, pointA, cross, (cross, pointA), 1, points))
-            arcs[item].set_time(t1)
-            arcs[item].set_demand(p1,p2)
-            arcs[item].set_distance(d1)
-            arcs[item].set_points_generated(l1)
-            arcs[item].set_points_received(l2)
-            idx = idx + 1
-            item = item + 1
+        # We creae the base path with the base vehicle.
+        paths.append(pa.Path(idx, pointA, cross, (cross, pointA), 1, points))
+        paths[item].set_time(t1)
+        paths[item].set_demand(p1,p2)
+        paths[item].set_distance(d1)
+        paths[item].set_points_generated(l1)
+        paths[item].set_points_received(l2)
+        idx = idx + 1
+        item = item + 1
 
+        # If the time is lower than 3/4 of the timeWindow then we use the truck vehicle.
         if t1 * 4/3 <= timeWindow:
-            arcs.append(pa.Path(idx, pointA, cross, (cross, pointA), 2, points))
-            arcs[item].set_time(t1 * 4/3)
-            arcs[item].set_demand(p1,p2)
-            arcs[item].set_distance(d1)
-            arcs[item].set_points_generated(l1)
-            arcs[item].set_points_received(l2)
+            paths.append(pa.Path(idx, pointA, cross, (cross, pointA), 2, points))
+            paths[item].set_time(t1 * 4/3)
+            paths[item].set_demand(p1,p2)
+            paths[item].set_distance(d1)
+            paths[item].set_points_generated(l1)
+            paths[item].set_points_received(l2)
             idx = idx + 1
             item = item + 1
 
+        # If the time is lower that 3 hours we can use the trailers
         if t1 * 4/3 <= 4:
-            arcs.append(pa.Path(idx, pointA, cross, (cross, pointA), 3, points))
-            arcs[item].set_time(t1 * 4/3)
-            arcs[item].set_demand(p1,p2)
-            arcs[item].set_distance(d1)
-            arcs[item].set_points_generated(l1)
-            arcs[item].set_points_received(l2)
+            paths.append(pa.Path(idx, pointA, cross, (cross, pointA), 3, points))
+            paths[item].set_time(t1 * 4/3)
+            paths[item].set_demand(p1,p2)
+            paths[item].set_distance(d1)
+            paths[item].set_points_generated(l1)
+            paths[item].set_points_received(l2)
             idx = idx + 1
             item = item + 1
     
-    return arcs, idx
+    # It returns the list of paths and the current free index for the paths.
+    return paths, idx
 
 def complex_path_generation(cross, cross_points, arcs, points, times, distance, idx):
     """"""

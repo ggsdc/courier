@@ -1,7 +1,22 @@
 import pandas as pd
 
 def read_data(vehicles_path, points_path, demand_path):
-    """"""
+    """
+    Function to read all the data
+
+    Arguments
+    ---------
+    vehicles_path : string
+        Path to the vehicle data file
+    points_path : string
+        Path to the points data file
+    demand_path : string
+        Path to the demand data file
+
+    Returns
+    -------
+        A tuple with the dataframes of the data read for vehicles, points and demand.
+    """
     vehicles = pd.read_csv(vehicles_path, sep = '\t')
     points = pd.read_csv(points_path, sep = '\t')
     demand = pd.read_csv(demand_path, sep = '\t')
@@ -9,7 +24,18 @@ def read_data(vehicles_path, points_path, demand_path):
     return vehicles, points, demand
 
 def process_demand(demand_data):
-    """"""
+    """
+    Function to process the demand
+
+    Arguments
+    ---------
+    demand_data : dataframe
+        Dataframe with the demand data.
+
+    Returns
+    -------
+        A tuple with three dictionaries, one with demand dictionaries, another with times and another with distances.
+    """
     demand = demand_data[['originCode', 'destinationCode', 'parcels']]
     demand = demand[(demand.parcels>0)]
     demand_dict = demand.groupby('originCode').apply(lambda x: dict(zip(x['destinationCode'], x['parcels']))).to_dict()
@@ -64,12 +90,25 @@ def process_demand(demand_data):
     return demand_dicts, times_dict, distance_dict
 
 def process_points(points_data):
-    """"""
+    """
+    Function to process the points data
+    
+    Arguments
+    ---------
+    points_data : dataframe
+        A data frame containing the data read from the points.
+
+    Returns
+    -------
+        A dictionary with the data.
+    """
     points_names = points_data[['code', 'point']]
     points_names_dict = dict(zip(points_names.code, points_names.point))
 
     return points_names_dict
 
 def read_all_data():
-    """"""
+    """
+    Not implemented function.
+    """
     return 0

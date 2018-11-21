@@ -1,11 +1,13 @@
 class Itinerary(object):
-    """ Class defined for the itineraries.
+    """
+    Class defined for the itineraries.
 
     This class will be used by the itineraries, defining a series of arguments and methods to be used.
-    
     """
+
     def __init__(self, idx, origin, cross, destination, points, vehicle_first, vehicle_second):
-        """Initialize magic method to create a new itinerary.
+        """
+        Initialize magic method to create a new itinerary.
         
         Parameters
         ----------
@@ -26,7 +28,7 @@ class Itinerary(object):
 
         Returns
         -------
-            A new instance of the cycle object.
+            A new instance of the itinerary object.
         """
         self.idx = idx
         self.origin = origin
@@ -37,24 +39,34 @@ class Itinerary(object):
         self.vehicle_second = vehicle_second
 
     def __repr__(self):
-        """Representation magic method"""
+        """
+        Representation magic method
+        """
         return 'Itinerary ' + str(self.idx)
 
     def __str__(self):
-        """Print magic method"""
+        """
+        Print magic method
+        """
         return 'Itinerary with idx ' + str(self.idx) \
             + ' passing through the points ' + str(self.points) \
             + ' with the vehicles ' + str(self.vehicle_first) \
             + ' and ' + str(self.vehicle_second)
 
     def set_demand(self):
-        """"""
+        """
+        
+        """
         return True
     
     def get_demand(self):
-        """"""
+        """
+        
+        """
         return True
     
     def print_demand(self):
-        """"""
+        """
+        
+        """
         return True

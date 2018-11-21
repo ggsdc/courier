@@ -4,7 +4,8 @@ class Cycle(object):
     This class will be used for the cycles, defining a series of methods and arguments
     """
     def __init__(self, idx, origin, cross, points, vehicle, names):
-        """Initialize magic method to create a new cycle.
+        """
+        Initialize magic method to create a new cycle.
         
         Parameters
         ----------
@@ -18,6 +19,8 @@ class Cycle(object):
             List of the points in the cycle, the order is origin - middle points - cross - middle points - origin.
         vehicle : int
             Code of the vehicle that does the cycle.
+        names : dict
+            Dictionary with the names of the points to generate the full name of the cycle.
 
         Returns
         -------
@@ -36,11 +39,15 @@ class Cycle(object):
         self.name += ')'
 
     def __repr__(self):
-        """Representation magic method"""
+        """
+        Representation magic method
+        """
         return 'Cycle ' + str(self.idx)
 
     def __str__(self):
-        """Print magic method"""
+        """
+        Print magic method
+        """
         return 'Cycle with idx ' + str(self.idx) \
             + ' passing through the points ' + str(self.points) \
             + ' with the vehicle ' + str(self.vehicle)
@@ -63,12 +70,15 @@ class Cycle(object):
         self.received = received
 
     def print_demand(self):
-        """Method to get the info about the demand."""
+        """
+        Method to get the info about the demand.
+        """
         return 'The points in the cycle generate ' + str(self.generated) \
             + ' parcels and receive ' + str(self.received) + ' parcels'
 
     def set_length(self, firstLength = 0, secondLength = 0):
-        """Method to set the length of the cycle.
+        """
+        Method to set the length of the cycle.
         
         Parameters
         ----------
@@ -85,7 +95,8 @@ class Cycle(object):
         self.secondLength = secondLength
     
     def get_length(self):
-        """Method to get the lengths back
+        """
+        Method to get the lengths back
         
         Parameters
         ----------
@@ -98,7 +109,8 @@ class Cycle(object):
         return (self.firstLength, self.secondLength)
 
     def set_time(self, firstTime = 0, secondTime = 0):
-        """Method to assign the time that the cycle needs to go to all points.
+        """
+        Method to assign the time that the cycle needs to go to all points.
         
         Parameters
         ----------
@@ -118,7 +130,8 @@ class Cycle(object):
         self.secondTimeMin = self.secondTime * 60
 
     def get_time(self):
-        """Method to get the time needed for the cycle both as hours and minutes
+        """
+        Method to get the time needed for the cycle both as hours and minutes
         
         Parameters
         ----------

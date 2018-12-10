@@ -3,7 +3,7 @@ class Cycle(object):
     
     This class will be used for the cycles, defining a series of methods and arguments
     """
-    def __init__(self, idx, origin, cross, points, vehicle, names):
+    def __init__(self, idx, origin, cross, points, path_first, path_second, vehicle, names):
         """
         Initialize magic method to create a new cycle.
         
@@ -17,6 +17,10 @@ class Cycle(object):
             Code of the cross docking point of the cycle.
         points : tuple
             List of the points in the cycle, the order is origin - middle points - cross - middle points - origin.
+        path_first : path instance
+
+        path_second : path instance
+
         vehicle : int
             Code of the vehicle that does the cycle.
         names : dict
@@ -30,13 +34,23 @@ class Cycle(object):
         self.origin = origin
         self.cross = cross
         self.points = points
+        self.path_first = path_first
+        self.path_second = path_second
         self.vehicle = vehicle
+
         self.name = '('
         for point in self.points:
             self.name += str(names[point]) + ', '
         
-        self.name += self.name + str(self.vehicle)
+        self.name = self.name + str(self.vehicle)
         self.name += ')'
+
+        self.arcs = list()
+        self.arcs.extend(self.path_first.arcs_reversed)
+        self.arcs.extend(self.path_second.arcs)
+
+        self.arcs_first = self.path_first.arcs_reversed
+        self.arcs_second = self.path_second.arcs
 
     def __repr__(self):
         """
@@ -44,13 +58,19 @@ class Cycle(object):
         """
         return 'Cycle ' + str(self.idx)
 
-    def __str__(self):
-        """
-        Print magic method
-        """
+    # def __str__(self):
+    #     """
+    #     Print magic method
+    #     """
+    #     return 'Cycle with idx ' + str(self.idx) \
+    #         + ' passing through the points ' + str(self.points) \
+    #         + ' with the vehicle ' + str(self.vehicle)
+
+
+    def print(self):
         return 'Cycle with idx ' + str(self.idx) \
-            + ' passing through the points ' + str(self.points) \
-            + ' with the vehicle ' + str(self.vehicle)
+                 + ' passing through the points ' + str(self.points) \
+                 + ' with the vehicle ' + str(self.vehicle)
 
     def set_demand(self, generated = 0, received = 0):
         """Method to assign the demand that the cycle can give service to
@@ -93,6 +113,7 @@ class Cycle(object):
         """
         self.firstLength = firstLength
         self.secondLength = secondLength
+        self.length = self.firstLength + self.secondLength
     
     def get_length(self):
         """

@@ -1,5 +1,5 @@
-
-def parameter_phi(commodities, itineraries, arcs, points):
+# @profile
+def parameter_phi(commodities, itinerary, arcs, points):
     """
 
     :param commodities:
@@ -9,21 +9,22 @@ def parameter_phi(commodities, itineraries, arcs, points):
     :return:
     """
 
-    dictionary = dict()
-    for k in commodities:
-        aux_it = [it for it in itineraries if
-                  commodities[k]['origin'] in it.points_first and commodities[k]['destination'] in it.points_second]
-        for i in aux_it:
-            aux_arcs = {arc: arcs[arc] for arc in i.arcs}
-            check = 0
-            for a in aux_arcs:
-                if aux_arcs[a]['origin'] == points[commodities[k]['origin']]:
-                    check = 1
+    parameter = list()
+    domain = dict()
+    aux_commodities = [k for k in commodities if k.destination in itinerary.points_second]
+    for k in aux_commodities:
+        aux_arcs = {arc: arcs[arc] for arc in itinerary.arcs}
+        key = (k, itinerary, )
+        domain[key] = 1
+        check = 0
+        for a in aux_arcs:
+            if aux_arcs[a]['origin'] == points[k.origin]:
+                check = 1
 
-                if check == 1:
-                    dictionary[(k, i, a,)] = 1
+            if check == 1:
+                parameter.append((k, itinerary, a, ))
 
-                if aux_arcs[a]['destination'] == points[commodities[k]['destination']]:
-                    check = 0
+            if aux_arcs[a]['destination'] == points[k.destination]:
+                check = 0
 
-    return dictionary
+    return parameter, domain

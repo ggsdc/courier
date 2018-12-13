@@ -5,6 +5,9 @@ class Itinerary(object):
     This class will be used by the itineraries, defining a series of arguments and methods to be used.
     """
 
+    __slots__ = ('idx', 'origin', 'cross', 'destination', 'points', 'points_first', 'path_first', 'vehicle_first',
+                 'points_second', 'path_second', 'vehicle_second', 'name', 'arcs', 'arcs_first', 'arcs_second', )
+
     def __init__(self, idx, origin, cross, destination, points,
                  points_first, path_first, vehicle_first, points_second, path_second, vehicle_second, names):
         """

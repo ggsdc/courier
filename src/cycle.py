@@ -3,6 +3,11 @@ class Cycle(object):
     
     This class will be used for the cycles, defining a series of methods and arguments
     """
+
+    __slots__ = ('idx', 'origin', 'cross', 'points', 'path_first', 'path_second', 'vehicle', 'name', 'arcs',
+                 'arcs_first', 'arcs_second', 'generated', 'received', 'firstLength', 'secondLength', 'length',
+                 'firstTime', 'secondTime', 'firstTimeMin', 'secondTimeMin')
+
     def __init__(self, idx, origin, cross, points, path_first, path_second, vehicle, names):
         """
         Initialize magic method to create a new cycle.
@@ -66,13 +71,12 @@ class Cycle(object):
     #         + ' passing through the points ' + str(self.points) \
     #         + ' with the vehicle ' + str(self.vehicle)
 
-
     def print(self):
         return 'Cycle with idx ' + str(self.idx) \
                  + ' passing through the points ' + str(self.points) \
                  + ' with the vehicle ' + str(self.vehicle)
 
-    def set_demand(self, generated = 0, received = 0):
+    def set_demand(self, generated=0, received=0):
         """Method to assign the demand that the cycle can give service to
         
         Parameters

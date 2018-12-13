@@ -5,7 +5,10 @@ class Path(object):
     This class will be used for the paths, defining a series of methods and arguments
 
     """
+    __slots__ = ('idx', 'origin', 'destination', 'points', 'vehicle', 'name', 'generated', 'received', 'distance',
+                 'hours', 'minutes', 'points_generated', 'points_received', 'arcs', 'arcs_reversed')
     def __init__(self, idx, origin, destination, points, vehicle, names):
+
         """ Initialize magic method to create a new path.
 
         Parameters

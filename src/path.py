@@ -7,6 +7,7 @@ class Path(object):
     """
     __slots__ = ('idx', 'origin', 'destination', 'points', 'vehicle', 'name', 'generated', 'received', 'distance',
                  'hours', 'minutes', 'points_generated', 'points_received', 'arcs', 'arcs_reversed')
+
     def __init__(self, idx, origin, destination, points, vehicle, names):
 
         """ Initialize magic method to create a new path.
@@ -55,7 +56,6 @@ class Path(object):
         self.points_received = list()
 
         self.arcs = list()
-        aux = tuple()
         for i in range(0, len(self.points)):
             try:
                 aux = (names[self.points[i]], names[self.points[i+1]], self.vehicle, )
@@ -64,7 +64,6 @@ class Path(object):
             self.arcs.append(aux)
 
         self.arcs_reversed = list()
-        aux = tuple()
         for i in range(1, len(self.points)):
             try:
                 aux = (names[self.points[-i]], names[self.points[-i-1]], self.vehicle, )

@@ -3,7 +3,7 @@
 """
 
 import json
-from nodes import Node
+from courier.structure.nodes import Node
 
 
 class Data:

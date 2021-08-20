@@ -5,11 +5,9 @@
 import datetime
 from typing import Dict, List
 
-import commodity as cm
-import cycle as cy
-import itinerary as it
+from courier.structure import cycle as cy, itinerary as it, commodity as cm
 import parameter_generation as pg
-from path import Path
+from courier.structure.path import Path
 
 
 def simple_path_generation(

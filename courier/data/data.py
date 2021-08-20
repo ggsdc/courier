@@ -3,7 +3,7 @@
 """
 
 import json
-from courier.structure.nodes import Node
+from courier.structure import Edge, Node, Vehicle
 
 
 class Data:
@@ -20,20 +20,22 @@ class Data:
         # Nodes data
         self.nodes_path = nodes_path
         self.nodes = list()
-        self.nodes_collection = list()
+        self.nodes_collection = dict()
 
         # TODO: Distances data
         self.distances_path = distances_path
+        self.distances = list()
 
         # TODO: Demand data
         self.demand_path = demand_path
-        self.edges = list()
-        self.edges_collection = list()
+        self.demand = list()
 
-        # TODO: Vehicle data
+        self.edges = list()
+        self.edges_collection = dict()
+
         self.vehicle_path = vehicle_path
         self.vehicles = list()
-        self.vehicles_collection = list()
+        self.vehicles_collection = dict()
 
         # Process data
         self._load_points_data()
@@ -47,12 +49,62 @@ class Data:
         :rtype:
         """
         with open(self.nodes_path) as f:
-            self.nodes = json.load(f)
+            temp = json.load(f)
 
-        self.nodes_collection = [Node(**data) for data in self.nodes]
+        self.nodes = [Node(node) for node in temp]
+        self.nodes_collection = {node.code: node for node in self.nodes}
 
     def _load_vehicles_data(self):
-        pass
+        """
+
+        :return:
+        :rtype:
+        """
+        with open(self.vehicle_path) as f:
+            temp = json.load(f)
+
+        self.vehicles = [Vehicle(vehicle) for vehicle in temp]
+        self.vehicles_collection = {vehicle.code: vehicle for vehicle in self.vehicles}
 
     def _load_edges_data(self):
-        pass
+        with open(self.demand_path) as f:
+            temp_demand = json.load(f)
+
+        self.demand = [
+            {
+                **demand,
+                **{
+                    "origin": self.nodes_collection[demand["origin"]],
+                    "destination": self.nodes_collection[demand["destination"]],
+                },
+            }
+            for demand in temp_demand
+        ]
+
+        self.edges = [Edge(demand) for demand in self.demand]
+        self.edges_collection = {
+            (edge.origin.code, edge.destination.code): edge for edge in self.edges
+        }
+
+        with open(self.distances_path) as f:
+            temp_distances = json.load(f)
+
+        self.distances = [
+            {
+                **distance,
+                **{
+                    "origin": self.nodes_collection[distance["origin"]],
+                    "destination": self.nodes_collection[distance["destination"]],
+                },
+            }
+            for distance in temp_distances
+        ]
+
+        for distance in self.distances:
+            if (
+                distance["origin"].code,
+                distance["destination"].code,
+            ) in self.edges_collection.keys():
+                self.edges_collection[
+                    (distance["origin"].code, distance["destination"].code)
+                ].set_distance_time(distance["distance"], distance["time"])

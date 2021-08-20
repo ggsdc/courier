@@ -1,0 +1,26 @@
+[
+  {
+    "code": 1,
+    "name": "Van",
+    "capacity": 500,
+    "cost": 0.28,
+    "speed": 120,
+    "middle_stops": 1
+  },
+  {
+    "code": 2,
+    "name": "Truck",
+    "capacity": 1475,
+    "cost": 0.57,
+    "speed": 90,
+    "middle_stops": 0
+  },
+  {
+    "code": 3,
+    "name": "Trailer",
+    "capacity": 2650,
+    "cost": 0.76,
+    "speed": 90,
+    "middle_stops": 0
+  }
+]

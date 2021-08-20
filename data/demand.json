@@ -1,0 +1,22 @@
+[
+  {
+    "origin": 280,
+    "destination": 231,
+    "parcels": 25
+  },
+  {
+    "origin": 231,
+    "destination": 280,
+    "parcels": 33
+  },
+  {
+    "origin": 280,
+    "destination": 500,
+    "parcels": 34
+  },
+  {
+    "origin": 500,
+    "destination": 280,
+    "parcels": 14
+  }
+]

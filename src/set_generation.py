@@ -1,14 +1,20 @@
+"""
+
+"""
+
 import datetime
 from typing import Dict, List
+
 import commodity as cm
 import cycle as cy
 import itinerary as it
-from path import Path
 import parameter_generation as pg
+from path import Path
 
 
-# @profile
-def simple_path_generation(cross: int, points: Dict, times: Dict, distance: Dict, demand: Dict, idx: int):
+def simple_path_generation(
+    cross: int, points: Dict, times: Dict, distance: Dict, demand: Dict, idx: int
+):
     """
     Function to create paths of length N = 2
 
@@ -36,10 +42,10 @@ def simple_path_generation(cross: int, points: Dict, times: Dict, distance: Dict
 
     # unpack the demand dicts
     # demand_dict = demand['baseDict']
-    demand_origin_dict = demand['originDict']
-    demand_destination_dict = demand['destinationDict']
-    demand_parcels_for = demand['forDict']
-    demand_parcels_from = demand['fromDict']
+    demand_origin_dict = demand["originDict"]
+    demand_destination_dict = demand["destinationDict"]
+    demand_parcels_for = demand["forDict"]
+    demand_parcels_from = demand["fromDict"]
 
     # Time-window 6.228 hours for Madrid, 4 hours for the rest
     if cross == 280:
@@ -135,8 +141,15 @@ def simple_path_generation(cross: int, points: Dict, times: Dict, distance: Dict
 
 
 # @profile
-def complex_path_generation(cross: int, cross_points: List[int], paths: List, points: Dict, times: Dict,
-                            distance: Dict, idx: int):
+def complex_path_generation(
+    cross: int,
+    cross_points: List[int],
+    paths: List,
+    points: Dict,
+    times: Dict,
+    distance: Dict,
+    idx: int,
+):
     """
     Function to create paths of length N = 3
 
@@ -191,7 +204,7 @@ def complex_path_generation(cross: int, cross_points: List[int], paths: List, po
         for j in aux_paths:
 
             origin_j = j.origin
-            # Gets the time between origin of the paths or iterates over.                 
+            # Gets the time between origin of the paths or iterates over.
             try:
                 t2 = times[origin_i][origin_j]
             except KeyError:
@@ -210,14 +223,16 @@ def complex_path_generation(cross: int, cross_points: List[int], paths: List, po
             if t1 > t3:
                 continue
 
-            # If the vehicle of the paths is a truck it gets the length updated.  
+            # If the vehicle of the paths is a truck it gets the length updated.
             # if vehicle_i == 2:
             #     t2 = t2 * 4/3
 
             # If the duration of the composite path is less than the timeWindow then the path gets created.
             if t1 + t2 + 0.25 <= time_window:
                 # The path is created
-                path = Path(idx, origin_j, cross, (cross, origin_i, origin_j), vehicle_i, points)
+                path = Path(
+                    idx, origin_j, cross, (cross, origin_i, origin_j), vehicle_i, points
+                )
                 path_list.append(path)
 
                 # Gets the demand of both paths.
@@ -268,7 +283,9 @@ def cycle_generation(cross, arcs, points, idx):
 
     for i in arcs:
 
-        aux_arcs = [arc for arc in arcs if i.origin == arc.origin and i.vehicle == arc.vehicle]
+        aux_arcs = [
+            arc for arc in arcs if i.origin == arc.origin and i.vehicle == arc.vehicle
+        ]
         d1 = i.get_generated()
         aux = item
 
@@ -291,7 +308,9 @@ def cycle_generation(cross, arcs, points, idx):
             if len(j.points) == 3:
                 points_order = points_order + (j.points[2],)
 
-            cycle = cy.Cycle(idx, i.origin, cross, points_order, i, j, i.vehicle, points)
+            cycle = cy.Cycle(
+                idx, i.origin, cross, points_order, i, j, i.vehicle, points
+            )
             cycles.append(cycle)
             cycles[item].set_demand(d1, d2)
             cycles[item].set_length(i.get_distance(), j.get_distance())
@@ -309,7 +328,9 @@ def cycle_generation(cross, arcs, points, idx):
 
 
 # @profile
-def itinerary_generation(cross, first_paths, second_paths, commodities, arcs, points, idx):
+def itinerary_generation(
+    cross, first_paths, second_paths, commodities, arcs, points, idx
+):
     # TODO: revisar la lógica de las commodities para la creación de itinerarios
     # debería haber algún apquete de alguno de los puntos del primer camino a alguno de los puntos del segundo camino.
     """
@@ -334,7 +355,11 @@ def itinerary_generation(cross, first_paths, second_paths, commodities, arcs, po
     for i in first_paths:
         l1 = i.get_points_generated()
 
-        second_arcs_aux = [second for second in second_paths if i != second and i.origin != second.origin]
+        second_arcs_aux = [
+            second
+            for second in second_paths
+            if i != second and i.origin != second.origin
+        ]
         commodities_aux = [k for k in commodities if k.origin in i.points]
 
         for j in second_arcs_aux:
@@ -355,8 +380,20 @@ def itinerary_generation(cross, first_paths, second_paths, commodities, arcs, po
             if len(j.points) == 3:
                 points_order = points_order + (j.points[2],)
 
-            itinerary = it.Itinerary(idx, points_order[0], cross, points_order[-1], points_order,
-                                     i.points[::-1], i, i.vehicle, j.points, j, j.vehicle, points)
+            itinerary = it.Itinerary(
+                idx,
+                points_order[0],
+                cross,
+                points_order[-1],
+                points_order,
+                i.points[::-1],
+                i,
+                i.vehicle,
+                j.points,
+                j,
+                j.vehicle,
+                points,
+            )
 
             itineraries.append(itinerary)
             idx = idx + 1
@@ -368,7 +405,13 @@ def itinerary_generation(cross, first_paths, second_paths, commodities, arcs, po
 
         count += 1
         if count / len(first_paths) * 100 >= percentage:
-            print(datetime.datetime.now(), cross, ' - ', percentage, '% of iterations for itineraries complete')
+            print(
+                datetime.datetime.now(),
+                cross,
+                " - ",
+                percentage,
+                "% of iterations for itineraries complete",
+            )
             percentage = percentage + 25
 
     return itineraries, p_phi, p01_domain, idx
@@ -377,11 +420,15 @@ def itinerary_generation(cross, first_paths, second_paths, commodities, arcs, po
 # @profile
 def arcs_generation(arcs, cycles, points):
     aux = dict()
-    key = ''
+    key = ""
     for cy in cycles:
         for p in range(0, len(cy.points)):
             try:
-                key = (str(points[cy.points[p]]), str(points[cy.points[p + 1]]), cy.vehicle,)
+                key = (
+                    str(points[cy.points[p]]),
+                    str(points[cy.points[p + 1]]),
+                    cy.vehicle,
+                )
             except IndexError:
                 continue
 
@@ -391,9 +438,9 @@ def arcs_generation(arcs, cycles, points):
                 continue
             except KeyError:
                 aux[key] = dict()
-                aux[key]['origin'] = points[cy.points[p]]
-                aux[key]['destination'] = points[cy.points[p + 1]]
-                aux[key]['vehicle'] = cy.vehicle
+                aux[key]["origin"] = points[cy.points[p]]
+                aux[key]["destination"] = points[cy.points[p + 1]]
+                aux[key]["vehicle"] = cy.vehicle
 
     return aux
 
@@ -401,9 +448,9 @@ def arcs_generation(arcs, cycles, points):
 # @profile
 def commodities_generation(demand: Dict):
     commodities = list()
-    for i in demand['baseDict']:
-        for j in demand['baseDict'][i]:
-            commodity = cm.Commodity(i, j, demand['baseDict'][i][j])
+    for i in demand["baseDict"]:
+        for j in demand["baseDict"][i]:
+            commodity = cm.Commodity(i, j, demand["baseDict"][i][j])
             commodities.append(commodity)
 
     return commodities

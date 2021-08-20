@@ -1,16 +1,37 @@
+"""
+
+"""
+
+
 class Path(object):
-    
-    """ Class defined for the paths
+
+    """Class defined for the paths
 
     This class will be used for the paths, defining a series of methods and arguments
 
     """
-    __slots__ = ('idx', 'origin', 'destination', 'points', 'vehicle', 'name', 'generated', 'received', 'distance',
-                 'hours', 'minutes', 'points_generated', 'points_received', 'arcs', 'arcs_reversed')
+
+    __slots__ = (
+        "idx",
+        "origin",
+        "destination",
+        "points",
+        "vehicle",
+        "name",
+        "generated",
+        "received",
+        "distance",
+        "hours",
+        "minutes",
+        "points_generated",
+        "points_received",
+        "arcs",
+        "arcs_reversed",
+    )
 
     def __init__(self, idx, origin, destination, points, vehicle, names):
 
-        """ Initialize magic method to create a new path.
+        """Initialize magic method to create a new path.
 
         Parameters
         ----------
@@ -40,12 +61,12 @@ class Path(object):
         self.points = points
         self.vehicle = vehicle
 
-        self.name = '('
+        self.name = "("
         for point in self.points:
-            self.name += str(names[point]) + ', '
-        
+            self.name += str(names[point]) + ", "
+
         self.name = self.name + str(self.vehicle)
-        self.name += ')'
+        self.name += ")"
 
         self.generated = 0
         self.received = 0
@@ -58,7 +79,11 @@ class Path(object):
         self.arcs = list()
         for i in range(0, len(self.points)):
             try:
-                aux = (names[self.points[i]], names[self.points[i+1]], self.vehicle, )
+                aux = (
+                    names[self.points[i]],
+                    names[self.points[i + 1]],
+                    self.vehicle,
+                )
             except IndexError:
                 continue
             self.arcs.append(aux)
@@ -66,27 +91,36 @@ class Path(object):
         self.arcs_reversed = list()
         for i in range(1, len(self.points)):
             try:
-                aux = (names[self.points[-i]], names[self.points[-i-1]], self.vehicle, )
+                aux = (
+                    names[self.points[-i]],
+                    names[self.points[-i - 1]],
+                    self.vehicle,
+                )
             except IndexError:
                 continue
             self.arcs_reversed.append(aux)
 
     def __repr__(self):
         """Representation magic method"""
-        return 'Path  ' + str(self.idx) + ' - ' + str(self.name)
+        return "Path  " + str(self.idx) + " - " + str(self.name)
 
     def __str__(self):
         """Print magic method"""
-        return 'Path with idx ' + str(self.idx) \
-            + ' passing through the points ' + str(self.points) \
-            + ' with the vehicle ' + str(self.vehicle)
-    
+        return (
+            "Path with idx "
+            + str(self.idx)
+            + " passing through the points "
+            + str(self.points)
+            + " with the vehicle "
+            + str(self.vehicle)
+        )
+
     def set_demand(self, generated=0, received=0):
         """Method to assign the demand that the path can give service to
-        
+
         Parameters
         ----------
-        self : 
+        self :
             The instance of Path in which we set the demand.
         generated : int
             Amount of parcels that have to leave the points in the arc. Defaults to 0.
@@ -209,14 +243,19 @@ class Path(object):
         The list of points the Path receives demand from.
         """
         return self.points_received
-  
+
     def print_demand(self):
         """
         Method to print the demand info of the Path
         """
-        return 'The points in the path generate ' + str(self.generated) \
-            + ' parcels and receive ' + str(self.received) + ' parcels'
-    
+        return (
+            "The points in the path generate "
+            + str(self.generated)
+            + " parcels and receive "
+            + str(self.received)
+            + " parcels"
+        )
+
     def set_distance(self, distance):
         """
         Method to set the length of the path.
@@ -246,12 +285,12 @@ class Path(object):
         """
         Method to print the full name of the path.
         """
-        return 'The path is: ' + str(self.name)
+        return "The path is: " + str(self.name)
 
     def set_time(self, hours=0):
         """
         Method to assign the time duration of the path
-        
+
         Parameters
         ----------
         hours : float
@@ -273,7 +312,7 @@ class Path(object):
         A tuple of values, the hours and minutes parameters of the path.
         """
         return self.hours, self.minutes
-    
+
     def get_hours(self):
         """
         Method to get just the duration of the path in hours.

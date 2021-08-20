@@ -1,17 +1,43 @@
+"""
+
+"""
+
+
 class Cycle(object):
     """Class defined for the cycles.
-    
+
     This class will be used for the cycles, defining a series of methods and arguments
     """
 
-    __slots__ = ('idx', 'origin', 'cross', 'points', 'path_first', 'path_second', 'vehicle', 'name', 'arcs',
-                 'arcs_first', 'arcs_second', 'generated', 'received', 'firstLength', 'secondLength', 'length',
-                 'firstTime', 'secondTime', 'firstTimeMin', 'secondTimeMin')
+    __slots__ = (
+        "idx",
+        "origin",
+        "cross",
+        "points",
+        "path_first",
+        "path_second",
+        "vehicle",
+        "name",
+        "arcs",
+        "arcs_first",
+        "arcs_second",
+        "generated",
+        "received",
+        "firstLength",
+        "secondLength",
+        "length",
+        "firstTime",
+        "secondTime",
+        "firstTimeMin",
+        "secondTimeMin",
+    )
 
-    def __init__(self, idx, origin, cross, points, path_first, path_second, vehicle, names):
+    def __init__(
+        self, idx, origin, cross, points, path_first, path_second, vehicle, names
+    ):
         """
         Initialize magic method to create a new cycle.
-        
+
         Parameters
         ----------
         idx : int
@@ -43,12 +69,12 @@ class Cycle(object):
         self.path_second = path_second
         self.vehicle = vehicle
 
-        self.name = '('
+        self.name = "("
         for point in self.points:
-            self.name += str(names[point]) + ', '
-        
+            self.name += str(names[point]) + ", "
+
         self.name = self.name + str(self.vehicle)
-        self.name += ')'
+        self.name += ")"
 
         self.arcs = list()
         self.arcs.extend(self.path_first.arcs_reversed)
@@ -61,7 +87,7 @@ class Cycle(object):
         """
         Representation magic method
         """
-        return 'Cycle ' + str(self.idx)
+        return "Cycle " + str(self.idx)
 
     # def __str__(self):
     #     """
@@ -72,13 +98,18 @@ class Cycle(object):
     #         + ' with the vehicle ' + str(self.vehicle)
 
     def print(self):
-        return 'Cycle with idx ' + str(self.idx) \
-                 + ' passing through the points ' + str(self.points) \
-                 + ' with the vehicle ' + str(self.vehicle)
+        return (
+            "Cycle with idx "
+            + str(self.idx)
+            + " passing through the points "
+            + str(self.points)
+            + " with the vehicle "
+            + str(self.vehicle)
+        )
 
     def set_demand(self, generated=0, received=0):
         """Method to assign the demand that the cycle can give service to
-        
+
         Parameters
         ----------
         generated : int
@@ -97,13 +128,18 @@ class Cycle(object):
         """
         Method to get the info about the demand.
         """
-        return 'The points in the cycle generate ' + str(self.generated) \
-            + ' parcels and receive ' + str(self.received) + ' parcels'
+        return (
+            "The points in the cycle generate "
+            + str(self.generated)
+            + " parcels and receive "
+            + str(self.received)
+            + " parcels"
+        )
 
-    def set_length(self, firstLength = 0, secondLength = 0):
+    def set_length(self, firstLength=0, secondLength=0):
         """
         Method to set the length of the cycle.
-        
+
         Parameters
         ----------
         firstLength : float
@@ -118,11 +154,11 @@ class Cycle(object):
         self.firstLength = firstLength
         self.secondLength = secondLength
         self.length = self.firstLength + self.secondLength
-    
+
     def get_length(self):
         """
         Method to get the lengths back
-        
+
         Parameters
         ----------
             None
@@ -133,10 +169,10 @@ class Cycle(object):
         """
         return (self.firstLength, self.secondLength)
 
-    def set_time(self, firstTime = 0, secondTime = 0):
+    def set_time(self, firstTime=0, secondTime=0):
         """
         Method to assign the time that the cycle needs to go to all points.
-        
+
         Parameters
         ----------
         firstTime : int
@@ -157,7 +193,7 @@ class Cycle(object):
     def get_time(self):
         """
         Method to get the time needed for the cycle both as hours and minutes
-        
+
         Parameters
         ----------
             None

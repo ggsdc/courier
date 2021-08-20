@@ -1,3 +1,8 @@
+"""
+
+"""
+
+
 class Itinerary(object):
     """
     Class defined for the itineraries.
@@ -5,14 +10,42 @@ class Itinerary(object):
     This class will be used by the itineraries, defining a series of arguments and methods to be used.
     """
 
-    __slots__ = ('idx', 'origin', 'cross', 'destination', 'points', 'points_first', 'path_first', 'vehicle_first',
-                 'points_second', 'path_second', 'vehicle_second', 'name', 'arcs', 'arcs_first', 'arcs_second', )
+    __slots__ = (
+        "idx",
+        "origin",
+        "cross",
+        "destination",
+        "points",
+        "points_first",
+        "path_first",
+        "vehicle_first",
+        "points_second",
+        "path_second",
+        "vehicle_second",
+        "name",
+        "arcs",
+        "arcs_first",
+        "arcs_second",
+    )
 
-    def __init__(self, idx, origin, cross, destination, points,
-                 points_first, path_first, vehicle_first, points_second, path_second, vehicle_second, names):
+    def __init__(
+        self,
+        idx,
+        origin,
+        cross,
+        destination,
+        points,
+        points_first,
+        path_first,
+        vehicle_first,
+        points_second,
+        path_second,
+        vehicle_second,
+        names,
+    ):
         """
         Initialize magic method to create a new itinerary.
-        
+
         Parameters
         ----------
         idx : int
@@ -54,15 +87,19 @@ class Itinerary(object):
         self.path_second = path_second
         self.vehicle_second = vehicle_second
 
-        self.name = '('
-        self.name += str(names[points_first[0]]) + ', ' + str(names[points_first[1]]) + ', '
+        self.name = "("
+        self.name += (
+            str(names[points_first[0]]) + ", " + str(names[points_first[1]]) + ", "
+        )
         if len(points_first) == 3:
-            self.name += str(names[points_first[-1]]) + ', '
+            self.name += str(names[points_first[-1]]) + ", "
 
         self.name += str(names[points_second[1]])
         if len(points_second) == 3:
-            self.name += ', ' + str(names[points_second[-1]])
-        self.name += ', ' + str(self.vehicle_first) + ', ' + str(self.vehicle_second) + ')'
+            self.name += ", " + str(names[points_second[-1]])
+        self.name += (
+            ", " + str(self.vehicle_first) + ", " + str(self.vehicle_second) + ")"
+        )
 
         self.arcs = list()
         self.arcs.extend(self.path_first.arcs_reversed)
@@ -75,7 +112,7 @@ class Itinerary(object):
         """
         Representation magic method
         """
-        return 'Itinerary ' + str(self.idx)
+        return "Itinerary " + str(self.idx)
 
     # def __str__(self):
     #     """
@@ -87,19 +124,13 @@ class Itinerary(object):
     #         + ' and ' + str(self.vehicle_second)
 
     def set_demand(self):
-        """
-        
-        """
+        """ """
         return True
-    
+
     def get_demand(self):
-        """
-        
-        """
+        """ """
         return True
-    
+
     def print_demand(self):
-        """
-        
-        """
+        """ """
         return True

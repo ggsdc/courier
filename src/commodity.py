@@ -1,8 +1,17 @@
-class Commodity(object):
-    """
+"""
 
-    """
-    __slots__ = ('origin', 'destination', 'value', )
+"""
+
+
+class Commodity(object):
+    """ """
+
+    __slots__ = (
+        "origin",
+        "destination",
+        "value",
+    )
+
     def __init__(self, origin, destination, value):
         self.origin = origin
         self.destination = destination
@@ -12,4 +21,4 @@ class Commodity(object):
         """
         Representation magic method
         """
-        return 'Commodity ' + str(self.origin) + '-' + str(self.destination)
+        return "Commodity " + str(self.origin) + "-" + str(self.destination)

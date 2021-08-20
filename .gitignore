@@ -83,6 +83,7 @@ Thumbs.db
 /src/env/
 /src/.vscode/
 *.data
+testing.*
 
 # Python stuff
 # Byte-compiled / optimized / DLL files

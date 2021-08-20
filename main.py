@@ -8,9 +8,9 @@ from sys import getsizeof
 import pandas as pd
 import pulp as lp
 
-import courier.read_data as rd
-import courier.set_generation as sg
-import courier.translate_solver as tr
+import courier.data.read_data as rd
+import courier.structure.set_generation as sg
+import courier.solvers.translate_solver as tr
 
 
 def main():

@@ -6,7 +6,7 @@ import datetime
 from typing import Dict, List
 
 from courier.structure import cycle as cy, itinerary as it, commodity as cm
-import parameter_generation as pg
+from courier.model import parameter_generation as pg
 from courier.structure.path import Path
 
 

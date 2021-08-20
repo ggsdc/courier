@@ -14,8 +14,9 @@ import translate_solver as tr
 
 # Routes to the data files. This has to be changed.
 vehicles_path = "..\\data\\vehicles.data"
-points_path = "..\\data\\pointsFull.data"
+# points_path = "..\\data\\pointsFull.data"
 demand_path = "..\\data\\demandFull.data"
+points_path = "../data/points.json"
 
 conflict_points = [77, 438, 719]
 

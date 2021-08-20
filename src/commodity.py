@@ -1,9 +1,10 @@
 """
 
 """
+# TODO: TO BE DEPRECATED
 
 
-class Commodity(object):
+class Commodity:
     """ """
 
     __slots__ = (

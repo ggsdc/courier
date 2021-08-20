@@ -3,6 +3,7 @@
 """
 
 import pandas as pd
+import json
 
 
 def read_data(vehicles_path, points_path, demand_path):
@@ -20,10 +21,14 @@ def read_data(vehicles_path, points_path, demand_path):
 
     Returns
     -------
-        A tuple with the dataframes of the data read for vehicles, points and demand.
+        A tuple with the list of dictionaries for each data item.
     """
+
+    with open(points_path) as f:
+        points = json.load(f)
+
     vehicles = pd.read_csv(vehicles_path, sep="\t")
-    points = pd.read_csv(points_path, sep="\t")
+    # points = pd.read_csv(points_path, sep="\t")
     demand = pd.read_csv(demand_path, sep="\t")
 
     return vehicles, points, demand

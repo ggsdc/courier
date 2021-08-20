@@ -140,7 +140,6 @@ def simple_path_generation(
     return paths, idx
 
 
-# @profile
 def complex_path_generation(
     cross: int,
     cross_points: List[int],
@@ -260,7 +259,6 @@ def complex_path_generation(
     return path_list, idx
 
 
-# @profile
 def cycle_generation(cross, arcs, points, idx):
     """
 
@@ -327,7 +325,6 @@ def cycle_generation(cross, arcs, points, idx):
     return cycles, arcs_aux, arcs_aux_2, idx
 
 
-# @profile
 def itinerary_generation(
     cross, first_paths, second_paths, commodities, arcs, points, idx
 ):
@@ -417,7 +414,6 @@ def itinerary_generation(
     return itineraries, p_phi, p01_domain, idx
 
 
-# @profile
 def arcs_generation(arcs, cycles, points):
     aux = dict()
     key = ""
@@ -445,7 +441,6 @@ def arcs_generation(arcs, cycles, points):
     return aux
 
 
-# @profile
 def commodities_generation(demand: Dict):
     commodities = list()
     for i in demand["baseDict"]:

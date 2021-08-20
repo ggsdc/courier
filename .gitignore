@@ -80,8 +80,8 @@ Thumbs.db
 .Rproj.user
 
 # particular extensions
-/src/env/
-/src/.vscode/
+/courier/env/
+/courier/.vscode/
 *.data
 testing.*
 

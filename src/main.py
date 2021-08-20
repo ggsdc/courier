@@ -1,23 +1,21 @@
 # & c:/Users/bob_guille/Desktop/proyectos/i-d-courier/src/venv/Scripts/python.exe
 import datetime as datetime
-import pandas as pd
-import pulp as lp
+from typing import List
 from sys import getsizeof
 
-import model as md
-import parameter_generation as pg
+import pandas as pd
+import pulp as lp
+
 import read_data as rd
 import set_generation as sg
-import time_space as ts
 import translate_solver as tr
-
 
 # Routes to the data files. This has to be changed.
 vehicles_path = "..\\data\\vehicles.data"
 points_path = "..\\data\\pointsFull.data"
 demand_path = "..\\data\\demandFull.data"
 
-conflict_points =[77, 438, 719]
+conflict_points = [77, 438, 719]
 
 t1 = datetime.datetime.now()
 
@@ -44,7 +42,7 @@ print('Time to read everything: ', t2-t1)
 # Set of points
 points_set = set(points_data['code'])
 # cross_docking_points = [280, 231]
-cross_docking_points = [231, 500, 930, 492, 35, 12]
+cross_docking_points = [231, 500, 930, 492, 35, 12, 280]
 
 # 280 - Madrid
 # 231 - Bailen
@@ -90,7 +88,6 @@ print('Time to initialize: ', t3-t2)
 
 # Set generation
 # Commodities set
-commodities = list()
 commodities = sg.commodities_generation(demand_dicts)
 print(datetime.datetime.now(), 'Commodities OK')
 
@@ -106,9 +103,7 @@ for cross in cross_docking_points:
         = sg.simple_path_generation(cross, points_dict, times_dict, distance_dict, demand_dicts, path_idx)
     t2 = datetime.datetime.now()
 
-    # print(cross, ' - ', len(temp_paths), ' Simple paths. Time: ', t2 - t1)
-
-    # Update dictionaries
+    # Update list
     path_list.extend(temp_paths)
     aux_list = temp_paths
 
@@ -118,9 +113,8 @@ for cross in cross_docking_points:
         = sg.complex_path_generation(cross, cross_docking_points, temp_paths,
                                      points_dict, times_dict, distance_dict, path_idx)
     t2 = datetime.datetime.now()
-    # print(cross, ' - ', len(temp_paths), ' Complex paths. Time: ', t2 - t1)
 
-    # Update the dictionaries
+    # Update the lists
     path_list.extend(temp_paths)
     aux_list.extend(temp_paths)
 
@@ -154,7 +148,7 @@ for cross in cross_docking_points:
 
     # We add the cross back to the population
     points_set.add(cross)
-    print(cross, ': {cycles: ', len(temp_cycles), ', itineraries: ', len(temp_itinerary), '}')
+    print(cross, ': {cycles: ', len(temp_cycles), ', itineraries: ', len(temp_itinerary),', arcs: ', len(aux_arcs) ,'}')
     print('Size of cycles: ',getsizeof(cycle_list)/1024/1024 , '. Size of itineraries: ',getsizeof(itinerary_list)/1024/1024)
     del(temp_paths, temp_cycles, temp_itinerary, p_phi_aux, p01_flow_domain_aux, aux_arcs, selected_paths,
         selected_paths_2)
@@ -188,7 +182,7 @@ del(aux_arcs)
 
 t5 = datetime.datetime.now()
 print('Time to generate parameters and sets: ', t5-t4)
-
+#
 # Model
 model = lp.LpProblem("Courier", lp.LpMinimize)
 
@@ -231,6 +225,7 @@ for a in arcs_list:
              'RQ01.' + str(RQ01_constraints)
     RQ01_constraints += 1
 print(datetime.datetime.now(), 'RQ01 OK')
+
 # RQ02 - Commodities are met
 RQ02_constraints = 1
 for k in commodities:
@@ -279,5 +274,5 @@ out3.to_csv(path_or_buf = '..\\data\\vehicles.csv', sep = ';', index = False, en
 # for v in var_values:
 #     if var_values[v]>0:
 #         print(v, var_values[v])
-
-
+#
+#

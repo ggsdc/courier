@@ -13,14 +13,16 @@ class Edge:
     """
 
     def __init__(self, data):
-        self.origin = data.get("origin", 0)
-        self.destination = data.get("destination", 0)
+        self.origin = data.get("origin", None)
+        self.destination = data.get("destination", None)
         self.distance = data.get("distance", 0)
         self.time = data.get("time", 0)
         self.parcels = data.get("parcels", 0)
         self._hash = self.__hash__()
 
     def __hash__(self):
+        if self.origin is None or self.destination is None:
+            return hash(None)
         return hash((self.origin.code, self.destination.code))
 
     def __eq__(self, other):

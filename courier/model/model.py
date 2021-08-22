@@ -1,6 +1,39 @@
 """
 
 """
+from ..structure import SimpleArc
+from ..const import TIME_WINDOW
+
+
+class Model:
+    def __init__(self, data):
+        self.data = data
+
+    def build_model(self):
+        self._generate_arcs()
+        self._generate_cycles()
+        self._generate_paths()
+
+    def _generate_arcs(self):
+        """"""
+        for cross in self.data.cross_docking:
+            for node in self.data.nodes:
+                if cross == node:
+                    continue
+
+                try:
+                    edge = self.data.edges_collection[(node.code, cross.code)]
+                except KeyError:
+                    continue
+
+                if edge.time > TIME_WINDOW or edge.time == 0 or edge.distance == 0:
+                    continue
+
+    def _generate_cycles(self):
+        pass
+
+    def _generate_paths(self):
+        pass
 
 
 def rq01_building(

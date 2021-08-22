@@ -13,6 +13,8 @@ def main():
     )
     print(d.nodes)
     print(d.vehicles)
+    for key, value in d.edges_collection.items():
+        print(value.__dict__)
 
 
 if __name__ == "__main__":

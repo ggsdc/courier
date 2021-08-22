@@ -21,12 +21,12 @@ class Data:
         self.nodes_path = nodes_path
         self.nodes = list()
         self.nodes_collection = dict()
+        self.cross_docking = list()
+        self.cross_docking_collection = dict()
 
-        # TODO: Distances data
         self.distances_path = distances_path
         self.distances = list()
 
-        # TODO: Demand data
         self.demand_path = demand_path
         self.demand = list()
 
@@ -53,6 +53,10 @@ class Data:
 
         self.nodes = [Node(node) for node in temp]
         self.nodes_collection = {node.code: node for node in self.nodes}
+        self.cross_docking = [node for node in self.nodes if node.cross_docking]
+        self.cross_docking_collection = {
+            cross.code: cross for cross in self.cross_docking
+        }
 
     def _load_vehicles_data(self):
         """

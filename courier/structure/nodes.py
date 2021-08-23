@@ -20,12 +20,17 @@ class Node:
 
         if self.cross_docking:
             self.capacity = data.get("capacity", 0)
+            self.time_window = data.get("time_window", 0)
             self.start = data.get("start", 0)
             self.end = data.get("end", 0)
+            self.duration = self.end - self.start
             self.unload_docks = data.get("unload_docks", 0)
             self.load_docks = data.get("load_docks", 0)
 
         self._hash = self.__hash__
+
+    def set_time_window(self, time_window):
+        self.time_window = time_window
 
     @property
     def __hash__(self):
@@ -33,3 +38,14 @@ class Node:
 
     def __repr__(self):
         return "Node: {} ({})".format(self.name, self.code)
+
+
+class CrossDocking(Node):
+    def __init__(self, data):
+        super().__init__(data)
+        self.capacity = data.get("capacity", 0)
+        self.time_window = data.get("time_window", 0)
+        self.start = data.get("start", 0)
+        self.end = data.get("end", 0)
+        self.unload_docks = data.get("unload_docks", 0)
+        self.load_docks = data.get("load_docks", 0)

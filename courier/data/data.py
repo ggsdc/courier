@@ -4,6 +4,7 @@
 
 import json
 from courier.structure import Edge, Node, Vehicle
+from courier.const import TIME_WINDOW
 
 
 class Data:
@@ -11,38 +12,46 @@ class Data:
     This class serves to store all the data to the problem and to be passed to the different generation methods
     """
 
-    def __init__(self, nodes_path, distances_path, demand_path, vehicle_path):
-        """
+    def __init__(self):
+        """ """
+        # File routes
+        self.nodes_path = None
+        self.distances_path = None
+        self.demand_path = None
+        self.vehicle_path = None
 
-        :param nodes_path:s
-        :type nodes_path:
-        """
-        # Nodes data
-        self.nodes_path = nodes_path
+        # Db configuration
+        self.connection_string = None
+
+        # Data: nodes, distances, demand, edges and vehicles
         self.nodes = list()
         self.nodes_collection = dict()
         self.cross_docking = list()
         self.cross_docking_collection = dict()
 
-        self.distances_path = distances_path
         self.distances = list()
 
-        self.demand_path = demand_path
         self.demand = list()
 
         self.edges = list()
         self.edges_collection = dict()
 
-        self.vehicle_path = vehicle_path
         self.vehicles = list()
         self.vehicles_collection = dict()
 
-        # Process data
-        self._load_points_data()
-        self._load_vehicles_data()
-        self._load_edges_data()
+    def load_data_from_json_files(
+        self, nodes_path, distances_path, demand_path, vehicle_path
+    ):
+        self.nodes_path = nodes_path
+        self.distances_path = distances_path
+        self.demand_path = demand_path
+        self.vehicle_path = vehicle_path
 
-    def _load_points_data(self):
+        self._load_nodes_data_json()
+        self._load_vehicles_data_json()
+        self._load_edges_data_json()
+
+    def _load_nodes_data_json(self):
         """
 
         :return:
@@ -58,7 +67,10 @@ class Data:
             cross.code: cross for cross in self.cross_docking
         }
 
-    def _load_vehicles_data(self):
+        for cross in self.cross_docking:
+            cross.set_time_window(TIME_WINDOW)
+
+    def _load_vehicles_data_json(self):
         """
 
         :return:
@@ -70,7 +82,12 @@ class Data:
         self.vehicles = [Vehicle(vehicle) for vehicle in temp]
         self.vehicles_collection = {vehicle.code: vehicle for vehicle in self.vehicles}
 
-    def _load_edges_data(self):
+    def _load_edges_data_json(self):
+        """
+
+        :return:
+        :rtype:
+        """
         with open(self.demand_path) as f:
             temp_demand = json.load(f)
 
@@ -86,6 +103,7 @@ class Data:
         ]
 
         self.edges = [Edge(demand) for demand in self.demand]
+
         self.edges_collection = {
             (edge.origin.code, edge.destination.code): edge for edge in self.edges
         }
@@ -109,6 +127,18 @@ class Data:
                 distance["origin"].code,
                 distance["destination"].code,
             ) in self.edges_collection.keys():
+
                 self.edges_collection[
                     (distance["origin"].code, distance["destination"].code)
                 ].set_distance_time(distance["distance"], distance["time"])
+            else:
+                self.edges.append(Edge(distance))
+                self.edges_collection[
+                    (distance["origin"].code, distance["destination"].code)
+                ] = self.edges[-1]
+
+    def load_data_from_csv_files(self):
+        pass
+
+    def load_data_from_db(self):
+        pass

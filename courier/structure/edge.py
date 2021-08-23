@@ -18,8 +18,16 @@ class Edge:
         self.distance = data.get("distance", 0)
         self.time = data.get("time", 0)
         self.parcels = data.get("parcels", 0)
-        self._hash = self.__hash__()
+        self._hash = self.__hash__
 
+    def set_distance_time(self, distance, time):
+        self.distance = distance
+        self.time = time
+
+    def set_parcels(self, parcels):
+        self.parcels = parcels
+
+    @property
     def __hash__(self):
         if self.origin is None or self.destination is None:
             return hash(None)
@@ -35,10 +43,3 @@ class Edge:
             self.origin.code,
             self.destination.code,
         )
-
-    def set_distance_time(self, distance, time):
-        self.distance = distance
-        self.time = time
-
-    def set_parcels(self, parcels):
-        self.parcels = parcels

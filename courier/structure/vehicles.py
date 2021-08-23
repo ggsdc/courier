@@ -15,6 +15,7 @@ class Vehicle:
         self.cost = data.get("cost", 0)
         self.speed = data.get("speed", 0)
         self.middle_stops = bool(data.get("middle_stops", False))
+        self._hash = self.__hash__
 
     @property
     def __hash__(self):

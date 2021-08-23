@@ -8,6 +8,8 @@ from ..const import TIME_WINDOW
 class Model:
     def __init__(self, data):
         self.data = data
+        self.arcs = list()
+        self.arcs_collection = dict()
 
     def build_model(self):
         self._generate_arcs()
@@ -15,19 +17,34 @@ class Model:
         self._generate_paths()
 
     def _generate_arcs(self):
-        """"""
-        for cross in self.data.cross_docking:
-            for node in self.data.nodes:
-                if cross == node:
+        """ """
+        vehicle = self.data.vehicles[0]
+        for origin in self.data.cross_docking:
+            for destination in self.data.nodes:
+                if origin == destination:
                     continue
 
                 try:
-                    edge = self.data.edges_collection[(node.code, cross.code)]
+                    edge = self.data.edges_collection[(destination.code, origin.code)]
                 except KeyError:
                     continue
 
                 if edge.time > TIME_WINDOW or edge.time == 0 or edge.distance == 0:
                     continue
+
+                self.arcs.append(
+                    SimpleArc(
+                        {
+                            "origin": origin,
+                            "destination": destination,
+                            "vehicle": vehicle,
+                        }
+                    )
+                )
+
+                self.arcs_collection[
+                    (origin.code, destination.code, vehicle.code)
+                ] = self.arcs[-1]
 
     def _generate_cycles(self):
         pass

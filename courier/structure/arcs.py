@@ -15,12 +15,13 @@ class SimpleArc(object):
         self.origin = data.get("origin", None)
         self.destination = data.get("destination", None)
         self.vehicle = data.get("vehicle", None)
-        self._hash = self.__hash__()
+        self._hash = self.__hash__
 
+    @property
     def __hash__(self):
         if self.origin is None or self.destination is None:
             return hash(None)
-        return hash((self.origin.code, self.destination.code))
+        return hash((self.origin.code, self.destination.code, self.vehicle.code))
 
     def __repr__(self):
         return "Simple arc: {}-{}-{} ({}-{}-{})".format(

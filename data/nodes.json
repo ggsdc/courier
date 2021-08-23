@@ -33,5 +33,10 @@
     "code": 12,
     "name": "Vitoria",
     "cross_docking": 1
+  },
+  {
+    "code": 80,
+    "name": "Barcelona",
+    "cross-docking": 0
   }
 ]

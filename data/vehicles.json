@@ -22,5 +22,13 @@
     "cost": 0.76,
     "speed": 90,
     "middle_stops": 0
+  },
+  {
+    "code": 4,
+    "name": "Non Return Trailer",
+    "capacity": 2650,
+    "cost": 0.86,
+    "speed": 90,
+    "middle_stops": 0
   }
 ]

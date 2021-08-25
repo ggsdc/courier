@@ -1,6 +1,7 @@
 """
 
 """
+from courier.const import TIME_SPEED_FACTOR
 
 
 class Vehicle:
@@ -15,6 +16,8 @@ class Vehicle:
         self.cost = data.get("cost", 0)
         self.speed = data.get("speed", 0)
         self.middle_stops = bool(data.get("middle_stops", False))
+        self.speed_factor = TIME_SPEED_FACTOR[self.speed]
+
         self._hash = self.__hash__
 
     @property

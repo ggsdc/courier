@@ -15,9 +15,9 @@ class SimpleArc(object):
         self.origin = data.get("origin", None)
         self.destination = data.get("destination", None)
         self.vehicle = data.get("vehicle", None)
-        self._hash = self.__hash__
+        self.distance = data.get("distance", None)
+        self._hash = self.__hash__()
 
-    @property
     def __hash__(self):
         if self.origin is None or self.destination is None:
             return hash(None)

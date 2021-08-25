@@ -34,9 +34,14 @@ class Edge:
         return hash((self.origin.code, self.destination.code))
 
     def __eq__(self, other):
+        if not isinstance(other, Edge):
+            raise NotImplemented("The objects do not share the same class")
         return self._hash == other._hash
 
     def __repr__(self):
+        """
+        Representation magic method
+        """
         return "Edge: {}-{} ({}-{})".format(
             self.origin.name,
             self.destination.name,

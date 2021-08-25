@@ -3,203 +3,86 @@
 """
 
 
-class Cycle(object):
-    """Class defined for the cycles.
+class Cycle:
+    def __init__(self, data):
+        self.arcs = data.get("arcs", [])
+        self.before_arc = self.arcs[0]
+        self.origin = self.arcs[0].origin
+        self.vehicle = self.arcs[0].vehicle
+        self.distance = self.arcs[0].distance
 
-    This class will be used for the cycles, defining a series of methods and arguments
-    """
-
-    __slots__ = (
-        "idx",
-        "origin",
-        "cross",
-        "points",
-        "path_first",
-        "path_second",
-        "vehicle",
-        "name",
-        "arcs",
-        "arcs_first",
-        "arcs_second",
-        "generated",
-        "received",
-        "firstLength",
-        "secondLength",
-        "length",
-        "firstTime",
-        "secondTime",
-        "firstTimeMin",
-        "secondTimeMin",
-    )
-
-    def __init__(
-        self, idx, origin, cross, points, path_first, path_second, vehicle, names
-    ):
-        """
-        Initialize magic method to create a new cycle.
-
-        Parameters
-        ----------
-        idx : int
-            Index of the generated cycle, it will be the key in the dictionary as well.
-        origin : int
-            Code of the origin node of the cycle, usually a non-crossdocking point.
-        cross : int
-            Code of the cross docking point of the cycle.
-        points : tuple
-            List of the points in the cycle, the order is origin - middle points - cross - middle points - origin.
-        path_first : path instance
-
-        path_second : path instance
-
-        vehicle : int
-            Code of the vehicle that does the cycle.
-        names : dict
-            Dictionary with the names of the points to generate the full name of the cycle.
-
-        Returns
-        -------
-            A new instance of the cycle object.
-        """
-        self.idx = idx
-        self.origin = origin
-        self.cross = cross
-        self.points = points
-        self.path_first = path_first
-        self.path_second = path_second
-        self.vehicle = vehicle
-
-        self.name = "("
-        for point in self.points:
-            self.name += str(names[point]) + ", "
-
-        self.name = self.name + str(self.vehicle)
-        self.name += ")"
-
-        self.arcs = list()
-        self.arcs.extend(self.path_first.arcs_reversed)
-        self.arcs.extend(self.path_second.arcs)
-
-        self.arcs_first = self.path_first.arcs_reversed
-        self.arcs_second = self.path_second.arcs
+    def __hash__(self):
+        pass
 
     def __repr__(self):
-        """
-        Representation magic method
-        """
-        return "Cycle " + str(self.idx)
+        pass
 
-    # def __str__(self):
-    #     """
-    #     Print magic method
-    #     """
-    #     return 'Cycle with idx ' + str(self.idx) \
-    #         + ' passing through the points ' + str(self.points) \
-    #         + ' with the vehicle ' + str(self.vehicle)
 
-    def print(self):
-        return (
-            "Cycle with idx "
-            + str(self.idx)
-            + " passing through the points "
-            + str(self.points)
-            + " with the vehicle "
-            + str(self.vehicle)
+class OneArcCycle(Cycle):
+    def __init__(self, data):
+        super().__init__(data)
+
+
+class TwoArcCycle(Cycle):
+    def __init__(self, data):
+        super().__init__(data)
+
+
+class CrossDockingCycle(TwoArcCycle):
+    # Nota - esto serían las rutas
+    def __init__(self, data):
+        super().__init__(data)
+        self.after_arc = self.arcs[-1]
+        self.cross_docking = self.arcs[0].destination
+        self.destination = self.arcs[-1].destination
+        # In the future the arcs do not need to have the same length so is better to be prepared for it.
+        self.cost = (
+            self.before_arc.distance + self.after_arc.distance
+        ) * self.vehicle.cost
+
+    def __hash__(self):
+        pass
+
+    def __repr__(self):
+        return "CD Cycle: {}-{}-{} ({}-{}-{})".format(
+            self.origin.name,
+            self.cross_docking.name,
+            self.vehicle.name,
+            self.origin.code,
+            self.cross_docking.code,
+            self.vehicle.code,
         )
 
-    def set_demand(self, generated=0, received=0):
-        """Method to assign the demand that the cycle can give service to
 
-        Parameters
-        ----------
-        generated : int
-            Amount of parcels that have to leave the points in the cycle during the first stage. Defaults to 0.
-        received : int
-            Amount of parcels that have to reach the points in the cycle during the second stage. Defaults to 0.
+class NonCrossDockingCycle(TwoArcCycle):
+    # Nota - esto serían los acercamientos.
+    def __init__(self, data):
+        super().__init__(data)
+        self.after_arc = self.arcs[-1]
+        self.destination = self.arcs[1].destination
+        # In the future the arcs do not need to have the same length so is better to be prepared for it.
+        self.cost = (
+            self.before_arc.distance + self.after_arc.distance
+        ) * self.vehicle.cost
 
-        Returns
-        -------
-            Nothing, it just assigns the value.
-        """
-        self.generated = generated
-        self.received = received
-
-    def print_demand(self):
-        """
-        Method to get the info about the demand.
-        """
-        return (
-            "The points in the cycle generate "
-            + str(self.generated)
-            + " parcels and receive "
-            + str(self.received)
-            + " parcels"
+    def __repr__(self):
+        return "Non-CD Cycle: {}-{}-{} ({}-{}-{})".format(
+            self.origin.name,
+            self.destination.name,
+            self.vehicle.name,
+            self.origin.code,
+            self.destination.code,
+            self.vehicle.code,
         )
 
-    def set_length(self, firstLength=0, secondLength=0):
-        """
-        Method to set the length of the cycle.
 
-        Parameters
-        ----------
-        firstLength : float
-            Length of the trip in the first stage. Defaults to 0.
-        secondLength : float
-            Length of the trip in the first stage
+class NonReturnCycle(OneArcCycle):
+    def __init__(self, data):
+        super().__init__(data)
+        self.destination = self.arcs[0].destination
 
-        Returns
-        -------
-            Nothing it just assigns the value.
-        """
-        self.firstLength = firstLength
-        self.secondLength = secondLength
-        self.length = self.firstLength + self.secondLength
+    def __hash__(self):
+        pass
 
-    def get_length(self):
-        """
-        Method to get the lengths back
-
-        Parameters
-        ----------
-            None
-
-        Returns
-        -------
-            A tuple with both lengths.
-        """
-        return (self.firstLength, self.secondLength)
-
-    def set_time(self, firstTime=0, secondTime=0):
-        """
-        Method to assign the time that the cycle needs to go to all points.
-
-        Parameters
-        ----------
-        firstTime : int
-            Duration of the trip in the first stage in hours. Defaults to 0.
-        secondTime : int
-            Duration of the trip in the second stage in hours. Defaults to 0.
-
-        Returns
-        -------
-            Nothing, it just assigns the value in hours and converts it to minutes as well.
-        """
-        self.firstTime = firstTime
-        self.secondTime = secondTime
-
-        self.firstTimeMin = self.firstTime * 60
-        self.secondTimeMin = self.secondTime * 60
-
-    def get_time(self):
-        """
-        Method to get the time needed for the cycle both as hours and minutes
-
-        Parameters
-        ----------
-            None
-
-        Returns
-        -------
-            A tuple with first both times in hours, then in minutes.
-        """
-        return (self.firstTime, self.secondTime, self.firstTimeMin, self.secondTimeMin)
+    def __repr__(self):
+        pass

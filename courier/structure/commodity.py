@@ -1,25 +1,30 @@
 """
 
 """
-# TODO: TO BE DEPRECATED
 
 
 class Commodity:
     """ """
 
-    __slots__ = (
-        "origin",
-        "destination",
-        "value",
-    )
+    def __init__(self, data):
+        self.origin = data.get("origin", None)
+        self.destination = data.get("destination", None)
+        self.amount = data.get("amount", None)
+        self._hash = self.__hash__
 
-    def __init__(self, origin, destination, value):
-        self.origin = origin
-        self.destination = destination
-        self.value = value
+    @property
+    def __hash__(self):
+        if self.origin is None or self.destination is None:
+            return hash(None)
+        return hash((self.origin.code, self.destination.code))
 
     def __repr__(self):
         """
         Representation magic method
         """
-        return "Commodity " + str(self.origin) + "-" + str(self.destination)
+        return "Commodity: {}-{} ({}-{})".format(
+            self.origin.name,
+            self.destination.name,
+            self.origin.code,
+            self.destination.code,
+        )

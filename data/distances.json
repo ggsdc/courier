@@ -1,0 +1,339 @@
+[
+  {
+    "origin": 280,
+    "destination": 231,
+    "distance": 295,
+    "time": 2.95
+  },
+  {
+    "origin": 231,
+    "destination": 280,
+    "distance": 295,
+    "time": 2.95
+  },
+  {
+    "origin": 280,
+    "destination": 500,
+    "distance": 320,
+    "time": 3.30
+  },
+  {
+    "origin": 500,
+    "destination": 280,
+    "distance": 320,
+    "time": 3.30
+  },
+  {
+    "origin": 280,
+    "destination": 930,
+    "distance": 355,
+    "time": 3.5
+  },
+  {
+    "origin": 930,
+    "destination": 280,
+    "distance": 255,
+    "time": 3.5
+  },
+  {
+    "origin": 280,
+    "destination": 492,
+    "distance": 266,
+    "time": 2.66
+  },
+  {
+    "origin": 492,
+    "destination": 280,
+    "distance": 266,
+    "time": 2.66
+  },
+  {
+    "origin": 280,
+    "destination": 35,
+    "distance": 371,
+    "time": 3.5
+  },
+  {
+    "origin": 35,
+    "destination": 280,
+    "distance": 371,
+    "time": 3.5
+  },
+  {
+    "origin": 280,
+    "destination": 12,
+    "distance": 364,
+    "time": 3.75
+  },
+  {
+    "origin": 12,
+    "destination": 280,
+    "distance": 364,
+    "time": 3.75
+  },
+  {
+    "origin": 280,
+    "destination": 80,
+    "distance": 628,
+    "time": 6.25
+  },
+  {
+    "origin": 80,
+    "destination": 280,
+    "distance": 628,
+    "time": 6.25
+  },
+  {
+    "origin": 231,
+    "destination": 500,
+    "distance": 598,
+    "time": 5.75
+  },
+  {
+    "origin": 500,
+    "destination": 231,
+    "distance": 598,
+    "time": 5.75
+  },
+  {
+    "origin": 231,
+    "destination": 930,
+    "distance": 419,
+    "time": 4
+  },
+  {
+    "origin": 930,
+    "destination": 231,
+    "distance": 419,
+    "time": 4
+  },
+  {
+    "origin": 231,
+    "destination": 492,
+    "distance": 558,
+    "time": 5.25
+  },
+  {
+    "origin": 492,
+    "destination": 231,
+    "distance": 558,
+    "time": 5.25
+  },
+  {
+    "origin": 231,
+    "destination": 35,
+    "distance": 395,
+    "time": 3.75
+  },
+  {
+    "origin": 35,
+    "destination": 231,
+    "distance": 395,
+    "time": 3.75
+  },
+  {
+    "origin": 231,
+    "destination": 12,
+    "distance": 646,
+    "time": 6.25
+  },
+  {
+    "origin": 12,
+    "destination": 231,
+    "distance": 646,
+    "time": 6.25
+  },
+  {
+    "origin": 500,
+    "destination": 930,
+    "distance": 309,
+    "time": 3.25
+  },
+  {
+    "origin": 930,
+    "destination": 500,
+    "distance": 309,
+    "time": 3.25
+  },
+  {
+    "origin": 500,
+    "destination": 492,
+    "distance": 528,
+    "time": 5
+  },
+  {
+    "origin": 492,
+    "destination": 500,
+    "distance": 528,
+    "time": 5
+  },
+  {
+    "origin": 500,
+    "destination": 35,
+    "distance": 440,
+    "time": 4.25
+  },
+  {
+    "origin": 35,
+    "destination": 500,
+    "distance": 440,
+    "time": 4.25
+  },
+  {
+    "origin": 500,
+    "destination": 12,
+    "distance": 263,
+    "time": 2.75
+  },
+  {
+    "origin": 12,
+    "destination": 500,
+    "distance": 263,
+    "time": 2.75
+  },
+  {
+    "origin": 500,
+    "destination": 80,
+    "distance": 312,
+    "time": 3
+  },
+  {
+    "origin": 80,
+    "destination": 500,
+    "distance": 312,
+    "time": 3
+  },
+  {
+    "origin": 930,
+    "destination": 492,
+    "distance": 623,
+    "time": 6
+  },
+  {
+    "origin": 492,
+    "destination": 930,
+    "distance": 623,
+    "time": 6
+  },
+  {
+    "origin": 930,
+    "destination": 35,
+    "distance": 122,
+    "time": 1.5
+  },
+  {
+    "origin": 35,
+    "destination": 930,
+    "distance": 122,
+    "time": 1.5
+  },
+  {
+    "origin": 930,
+    "destination": 12,
+    "distance": 546,
+    "time": 5.75
+  },
+  {
+    "origin": 12,
+    "destination": 930,
+    "distance": 546,
+    "time": 5.75
+  },
+  {
+    "origin": 930,
+    "destination": 80,
+    "distance": 350,
+    "time": 3.75
+  },
+  {
+    "origin": 80,
+    "destination": 930,
+    "distance": 350,
+    "time": 3.75
+  },
+  {
+    "origin": 492,
+    "destination": 35,
+    "distance": 637,
+    "time": 5.75
+  },
+  {
+    "origin": 35,
+    "destination": 492,
+    "distance": 637,
+    "time": 5.75
+  },
+  {
+    "origin": 492,
+    "destination": 12,
+    "distance": 349,
+    "time": 3.5
+  },
+  {
+    "origin": 12,
+    "destination": 492,
+    "distance": 349,
+    "time": 3.5
+  },
+  {
+    "origin": 492,
+    "destination": 12,
+    "distance": 349,
+    "time": 3.5
+  },
+  {
+    "origin": 12,
+    "destination": 492,
+    "distance": 349,
+    "time": 3.5
+  },
+  {
+    "origin": 492,
+    "destination": 80,
+    "distance": 791,
+    "time": 8.25
+  },
+  {
+    "origin": 80,
+    "destination": 492,
+    "distance": 791,
+    "time": 8.25
+  },
+  {
+    "origin": 35,
+    "destination": 12,
+    "distance": 710,
+    "time": 6.5
+  },
+  {
+    "origin": 12,
+    "destination": 35,
+    "distance": 710,
+    "time": 6.5
+  },
+  {
+    "origin": 35,
+    "destination": 80,
+    "distance": 480,
+    "time": 4.75
+  },
+  {
+    "origin": 80,
+    "destination": 35,
+    "distance": 480,
+    "time": 4.75
+  },
+  {
+    "origin": 12,
+    "destination": 80,
+    "distance": 568,
+    "time": 5.5
+  },
+  {
+    "origin": 80,
+    "destination": 12,
+    "distance": 568,
+    "time": 5.5
+  }
+
+]

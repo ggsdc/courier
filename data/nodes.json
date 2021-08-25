@@ -1,0 +1,42 @@
+[
+  {
+    "code": 280,
+    "name": "Madrid",
+    "cross_docking": 1
+  },
+  {
+    "code": 231,
+    "name": "Bailen",
+    "cross_docking": 0
+  },
+  {
+    "code": 500,
+    "name": "Zaragoza",
+    "cross_docking": 0
+  },
+  {
+    "code": 930,
+    "name": "Valencia",
+    "cross_docking": 0
+  },
+  {
+    "code": 492,
+    "name": "Benavente",
+    "cross_docking": 0
+  },
+  {
+    "code": 35,
+    "name": "Villena",
+    "cross_docking": 0
+  },
+  {
+    "code": 12,
+    "name": "Vitoria",
+    "cross_docking": 0
+  },
+  {
+    "code": 80,
+    "name": "Barcelona",
+    "cross-docking": 0
+  }
+]
